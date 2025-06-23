@@ -1,0 +1,12 @@
+{
+  "buildCommand": "vite build --config vite.config.vercel.ts",
+  "outputDirectory": "dist/public",
+  "framework": null,
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
