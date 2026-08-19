@@ -35,7 +35,7 @@ export const storage = {
     }
   },
 
-  addTask(task: Omit<Task, 'id' | 'createdAt'>): Task {
+  addTask(task: Omit<Task, 'id' | 'createdAt' | 'status'>): Task {
     const newTask: Task = {
       ...task,
       id: crypto.randomUUID(),
