@@ -1,43 +1,45 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { addDays, formatDayWithWeekday, getLocalDateKey } from "@/lib/date";
 
 function DateNavigator({ date, onChange }) {
   const canGoBack = date > "1970-01-01";
+  const isToday = date === getLocalDateKey();
   
   return (
     <div className="flex items-center justify-between">
       <button
         onClick={() => onChange(getLocalDateKey(addDays(new Date(date), -1)))}
         disabled={!canGoBack}
-        className="w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
-        style={{ color: "var(--text-muted)" }}
-        onMouseEnter={(e) => { if (canGoBack) { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--surface-hover)"; } }}
-        onMouseLeave={(e) => { if (canGoBack) { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; } }}
+        className="p-1.5 rounded-[4px] border border-border bg-surface text-muted-foreground hover:text-foreground hover:border-border-strong hover:bg-surface-hover transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
         aria-label="Previous day"
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className="w-4 h-4" />
       </button>
 
-      <div className="text-center">
-        <div className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
-          {formatDayWithWeekday(date)}
+      <div className="flex flex-col items-center">
+        <div className="flex items-center gap-2">
+          <Calendar className="w-3.5 h-3.5 text-greptile-green" />
+          <span className="text-sm font-bold font-display uppercase tracking-wider text-foreground">
+            {formatDayWithWeekday(date)}
+          </span>
         </div>
-        {date === getLocalDateKey() && (
-          <div className="text-xs font-medium mt-0.5" style={{ color: "var(--brand-blue)" }}>
-            Today
-          </div>
+        {isToday ? (
+          <span className="badge-tech badge-tech-green text-[9px] mt-1">
+            TODAY
+          </span>
+        ) : (
+          <span className="text-[10px] font-mono uppercase text-muted-foreground mt-0.5">
+            HISTORICAL LOG
+          </span>
         )}
       </div>
 
       <button
         onClick={() => onChange(getLocalDateKey(addDays(new Date(date), 1)))}
-        className="w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-150"
-        style={{ color: "var(--text-muted)" }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--surface-hover)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; }}
+        className="p-1.5 rounded-[4px] border border-border bg-surface text-muted-foreground hover:text-foreground hover:border-border-strong hover:bg-surface-hover transition-colors cursor-pointer"
         aria-label="Next day"
       >
-        <ChevronRight className="w-5 h-5" />
+        <ChevronRight className="w-4 h-4" />
       </button>
     </div>
   );

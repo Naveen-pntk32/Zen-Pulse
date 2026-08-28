@@ -75,7 +75,7 @@ function useSettings() {
 function useUpdateSettings() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: settingsService.update,
+    mutationFn: (patch) => settingsService.update(patch),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
       queryClient.invalidateQueries({ queryKey: ["analytics"] });

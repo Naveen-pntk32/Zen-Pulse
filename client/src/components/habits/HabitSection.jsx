@@ -10,24 +10,14 @@ function HabitSection({ section, habits, completions, date, onToggle, disabled }
   return (
     <div className="mb-4">
       {/* Section Header */}
-      <div className="flex items-center gap-2 mb-2.5">
-        <span
-          className={cn("w-2 h-2 rounded-full", meta?.dot)}
-          style={{ opacity: 0.8 }}
-        />
-        <span
-          className="text-xs font-semibold uppercase tracking-widest"
-          style={{ color: "var(--text-secondary)" }}
-        >
-          {meta?.label}
-        </span>
-        <span
-          className="text-xs font-medium px-1.5 py-0.5 rounded-md"
-          style={{
-            background: "var(--surface-raised)",
-            color:      "var(--text-muted)",
-          }}
-        >
+      <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-border/30">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-greptile-green" />
+          <span className="text-[10px] font-mono uppercase tracking-widest font-bold text-muted-foreground">
+            // {meta?.label ?? section.toUpperCase()}
+          </span>
+        </div>
+        <span className="badge-tech text-[9px] py-0 px-1.5">
           {habits.length}
         </span>
       </div>

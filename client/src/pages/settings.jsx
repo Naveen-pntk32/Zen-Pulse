@@ -1,27 +1,23 @@
-import { Moon, Sun, Database, Bell, Volume2, Timer as TimerIcon, Target } from "lucide-react";
+import { Moon, Sun, Database, Bell, Volume2, Timer as TimerIcon, Target, Sliders, Shield } from "lucide-react";
 import { useSettings, useUpdateSettings } from "@/services/settings.service";
 import { useAuth } from "@/hooks/use-auth";
 import { TIME_GOAL_OPTIONS } from "@/lib/defaults";
 import { applyTheme } from "@/contexts/theme";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 function SectionCard({ title, icon, children }) {
   return (
     <div
-      className="rounded-3xl p-6 lg:p-8"
-      style={{
-        background: "var(--surface-raised)",
-        border:     "1px solid var(--border)",
-      }}
+      className="rounded-[8px] p-5 sm:p-6 bg-surface-raised border border-border/80 shadow-md space-y-4"
     >
-      <h2
-        className="flex items-center gap-2.5 text-[15px] uppercase tracking-widest font-semibold mb-6 pb-4 border-b"
-        style={{ color: "var(--text-secondary)", borderColor: "var(--border)" }}
-      >
+      <div className="flex items-center gap-2 pb-3 border-b border-border/40">
         {icon}
-        {title}
-      </h2>
-      <div className="space-y-6">{children}</div>
+        <h2 className="text-xs font-bold font-display uppercase tracking-wider text-foreground">
+          {title}
+        </h2>
+      </div>
+      <div className="space-y-4">{children}</div>
     </div>
   );
 }
@@ -34,116 +30,89 @@ function SettingsPage() {
   if (!settings) return null;
   const set = (patch) => updateSettings.mutate(patch);
 
-  const Toggle = ({ checked, onChange }) => (
-    <div
-      className="w-10 h-6 rounded-full p-0.5 transition-colors duration-200 ease-in-out cursor-pointer"
-      style={{
-        background:  checked ? "var(--brand-blue)" : "var(--surface)",
-        border:      checked ? "1px solid transparent" : "1px solid var(--border-strong)",
-      }}
-      onClick={() => onChange(!checked)}
-    >
-      <div
-        className={cn(
-          "w-5 h-5 rounded-full bg-white transition-transform duration-200 shadow-sm",
-          checked ? "translate-x-4" : "translate-x-0"
-        )}
-      />
-    </div>
-  );
-
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
-          Settings
-        </h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
-          Manage your preferences and focus configuration
+    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
+      {/* Header */}
+      <div className="pb-4 border-b border-border/40">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl md:text-2xl font-bold font-display flex items-center gap-2.5 text-foreground">
+            <Sliders className="w-5 h-5 text-greptile-green" />
+            System Preferences
+          </h1>
+          <span className="badge-tech badge-tech-green">
+            CONFIG OK
+          </span>
+        </div>
+        <p className="text-xs font-sans text-muted-foreground mt-1">
+          Customize timers, notification thresholds, appearance, and backend sync parameters.
         </p>
       </div>
 
       {/* Timer Settings */}
-      <SectionCard title="Timer" icon={<TimerIcon className="w-5 h-5" style={{ color: "var(--brand-blue)" }} />}>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span style={{ color: "var(--text-primary)" }}>Focus Time</span>
-            <span className="font-mono font-medium" style={{ color: "var(--text-secondary)" }}>
-              {settings.focusDuration} min
-            </span>
+      <SectionCard title="Timer Durations" icon={<TimerIcon className="w-4 h-4 text-greptile-green" />}>
+        <div className="space-y-1.5">
+          <div className="flex justify-between text-xs font-mono">
+            <span className="text-muted-foreground uppercase">FOCUS DURATION</span>
+            <span className="text-greptile-green font-bold">{settings.focusDuration} MINS</span>
           </div>
           <input
-            type="range" min="5" max="60" step="5"
+            type="range" min="5" max="90" step="5"
             value={settings.focusDuration}
             onChange={(e) => set({ focusDuration: Number(e.target.value) })}
-            className="w-full"
-            style={{ accentColor: "var(--brand-blue)" }}
+            className="w-full accent-greptile-green cursor-pointer"
           />
         </div>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span style={{ color: "var(--text-primary)" }}>Break Time</span>
-            <span className="font-mono font-medium" style={{ color: "var(--text-secondary)" }}>
-              {settings.breakDuration} min
-            </span>
+
+        <div className="space-y-1.5">
+          <div className="flex justify-between text-xs font-mono">
+            <span className="text-muted-foreground uppercase">SHORT BREAK</span>
+            <span className="text-sky font-bold">{settings.breakDuration} MINS</span>
           </div>
           <input
             type="range" min="1" max="15" step="1"
             value={settings.breakDuration}
             onChange={(e) => set({ breakDuration: Number(e.target.value) })}
-            className="w-full"
-            style={{ accentColor: "var(--brand-blue)" }}
+            className="w-full accent-sky cursor-pointer"
           />
         </div>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span style={{ color: "var(--text-primary)" }}>Long Break</span>
-            <span className="font-mono font-medium" style={{ color: "var(--text-secondary)" }}>
-              {settings.longBreakDuration} min
-            </span>
+
+        <div className="space-y-1.5">
+          <div className="flex justify-between text-xs font-mono">
+            <span className="text-muted-foreground uppercase">LONG BREAK</span>
+            <span className="text-lavender font-bold">{settings.longBreakDuration} MINS</span>
           </div>
           <input
-            type="range" min="10" max="30" step="5"
+            type="range" min="10" max="45" step="5"
             value={settings.longBreakDuration}
             onChange={(e) => set({ longBreakDuration: Number(e.target.value) })}
-            className="w-full"
-            style={{ accentColor: "var(--brand-blue)" }}
+            className="w-full accent-lavender cursor-pointer"
           />
         </div>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span style={{ color: "var(--text-primary)" }}>Sessions until Long Break</span>
-            <span className="font-mono font-medium" style={{ color: "var(--text-secondary)" }}>
-              {settings.sessionsUntilLongBreak}
-            </span>
+
+        <div className="space-y-1.5">
+          <div className="flex justify-between text-xs font-mono">
+            <span className="text-muted-foreground uppercase">CYCLES UNTIL LONG BREAK</span>
+            <span className="text-neon font-bold">{settings.sessionsUntilLongBreak} CYCLES</span>
           </div>
           <input
-            type="range" min="2" max="6" step="1"
+            type="range" min="2" max="8" step="1"
             value={settings.sessionsUntilLongBreak}
             onChange={(e) => set({ sessionsUntilLongBreak: Number(e.target.value) })}
-            className="w-full"
-            style={{ accentColor: "var(--brand-blue)" }}
+            className="w-full accent-neon cursor-pointer"
           />
         </div>
       </SectionCard>
 
-      {/* Daily Goal */}
-      <SectionCard title="Daily Focus Goal" icon={<Target className="w-5 h-5" style={{ color: "var(--brand-amber)" }} />}>
+      {/* Daily Focus Goal */}
+      <SectionCard title="Daily Focus Target" icon={<Target className="w-4 h-4 text-neon" />}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="text-[13px] font-medium" style={{ color: "var(--text-muted)" }}>
-            Daily goal used for achievement tracking and auto check-in.
+          <div className="text-xs font-sans text-muted-foreground">
+            Target duration benchmark used for achievement calculation and automated habit triggers.
           </div>
           <select
             value={String(settings.dailyFocusGoalSeconds)}
             onChange={(e) => set({ dailyFocusGoalSeconds: Number(e.target.value) })}
-            className="w-full sm:w-48 px-3.5 py-2.5 text-[13px] font-medium rounded-xl outline-none cursor-pointer"
-            style={{
-              background: "var(--surface)",
-              border:     "1px solid var(--border-strong)",
-              color:      "var(--text-primary)",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-            onBlur={(e)  => (e.target.style.borderColor = "var(--border-strong)")}
+            className="w-full sm:w-48 px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-[4px] bg-surface border border-input-border text-foreground outline-none focus:border-greptile-green cursor-pointer"
           >
             {TIME_GOAL_OPTIONS.map((opt) => (
               <option key={opt.seconds} value={String(opt.seconds)}>
@@ -155,41 +124,46 @@ function SettingsPage() {
       </SectionCard>
 
       {/* Notifications */}
-      <SectionCard title="Notifications" icon={<Bell className="w-5 h-5" style={{ color: "#38bdf8" }} />}>
-        <div className="flex items-center justify-between">
-          <span className="flex items-center gap-2 text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>
-            <Volume2 className="w-4 h-4" style={{ color: "var(--text-muted)" }} /> Sound Alerts
-          </span>
-          <Toggle
+      <SectionCard title="Notification Protocols" icon={<Bell className="w-4 h-4 text-sky" />}>
+        <div className="flex items-center justify-between p-3 rounded-[4px] border border-border/60 bg-surface">
+          <div className="flex items-center gap-2.5">
+            <Volume2 className="w-4 h-4 text-greptile-green" />
+            <span className="text-xs font-sans font-medium text-foreground">Sound Alert Upon Completion</span>
+          </div>
+          <Switch
             checked={settings.soundEnabled}
-            onChange={(c) => set({ soundEnabled: c })}
+            onCheckedChange={(c) => set({ soundEnabled: c })}
           />
         </div>
-        <div className="flex items-center justify-between">
-          <span className="flex items-center gap-2 text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>
-            <Bell className="w-4 h-4" style={{ color: "var(--text-muted)" }} /> Web Notifications
-          </span>
-          <Toggle
+
+        <div className="flex items-center justify-between p-3 rounded-[4px] border border-border/60 bg-surface">
+          <div className="flex items-center gap-2.5">
+            <Bell className="w-4 h-4 text-sky" />
+            <span className="text-xs font-sans font-medium text-foreground">Desktop Browser Notifications</span>
+          </div>
+          <Switch
             checked={settings.notificationsEnabled}
-            onChange={(c) => set({ notificationsEnabled: c })}
+            onCheckedChange={(c) => set({ notificationsEnabled: c })}
           />
         </div>
       </SectionCard>
 
       {/* Appearance */}
-      <SectionCard title="Appearance" icon={<Moon className="w-5 h-5" style={{ color: "#a78bfa" }} />}>
-        <div className="flex items-center justify-between">
-          <span className="flex items-center gap-2 text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>
+      <SectionCard title="Visual Theme" icon={<Moon className="w-4 h-4 text-lavender" />}>
+        <div className="flex items-center justify-between p-3 rounded-[4px] border border-border/60 bg-surface">
+          <div className="flex items-center gap-2.5">
             {settings.theme === "light" ? (
-              <Sun className="w-4 h-4" style={{ color: "var(--brand-amber)" }} />
+              <Sun className="w-4 h-4 text-neon" />
             ) : (
-              <Moon className="w-4 h-4" style={{ color: "#a78bfa" }} />
+              <Moon className="w-4 h-4 text-lavender" />
             )}
-            Dark Mode
-          </span>
-          <Toggle
+            <span className="text-xs font-sans font-medium text-foreground">
+              {settings.theme === "light" ? "Light Mode Active" : "Dark Obsidian Theme Active"}
+            </span>
+          </div>
+          <Switch
             checked={settings.theme === "dark"}
-            onChange={(c) => {
+            onCheckedChange={(c) => {
               applyTheme(c ? "dark" : "light");
               set({ theme: c ? "dark" : "light" });
             }}
@@ -197,22 +171,18 @@ function SettingsPage() {
         </div>
       </SectionCard>
 
-      {/* Data */}
-      <SectionCard title="Data" icon={<Database className="w-5 h-5" style={{ color: "#4ade80" }} />}>
-        <div className="flex items-center justify-between text-sm">
-          <span className="font-medium" style={{ color: "var(--text-primary)" }}>Storage mode</span>
-          <span className="flex items-center gap-1.5 font-medium px-3 py-1 rounded-lg" style={{ background: "var(--surface)", color: "var(--text-secondary)" }}>
-            <span
-              className="w-2.5 h-2.5 rounded-full"
-              style={{ background: backend === "supabase" ? "#4ade80" : "var(--brand-amber)" }}
-            />
-            {backend === "supabase" ? "Supabase (cloud sync)" : "Local storage"}
+      {/* Data / Storage Mode */}
+      <SectionCard title="Storage & Persistence" icon={<Database className="w-4 h-4 text-greptile-green" />}>
+        <div className="flex items-center justify-between text-xs font-mono">
+          <span className="text-muted-foreground uppercase">CURRENT STORAGE ENGINE</span>
+          <span className="badge-tech badge-tech-green">
+            {backend === "supabase" ? "SUPABASE (CLOUD SYNC)" : "LOCALSTORAGE (OFFLINE)"}
           </span>
         </div>
-        <p className="text-[13px] mt-2" style={{ color: "var(--text-muted)" }}>
+        <p className="text-xs font-sans text-muted-foreground">
           {backend === "supabase"
-            ? "Your data is synced to the cloud and available across devices."
-            : "Sign in from your profile to enable cloud sync. Local data is lost when you clear browser data."}
+            ? "Your workspace is securely synced to Supabase cloud storage."
+            : "Sign in via Profile to enable cross-device cloud synchronization."}
         </p>
       </SectionCard>
     </div>

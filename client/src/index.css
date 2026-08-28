@@ -1,109 +1,138 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ============================================================
-   ZenPulse — TickTick Brand Design System
-   Source: scraped from ticktick.com live CSS (2026-08-28)
+   ZenPulse — Greptile Design Language System
+   Inspired by: https://www.greptile.com/
+   Fonts: DM Sans (body), Anybody (display/hero), Space Mono (technical)
+   Colors: Dark Slate (#0c0c11, #13121b, #191824) + Greptile Green (#28e99f)
    ============================================================ */
 
 :root {
-  /* --- TickTick Brand Colors --- */
-  --brand-blue: #4772fa;
-  --brand-blue-hover: #3560e8;
-  --brand-amber: #ffb000;
-  --brand-deep-navy: #203168;
+  /* --- Brand / Primary Accents --- */
+  --greptile-green: #28e99f;
+  --greptile-green-glow: rgba(40, 233, 159, 0.4);
+  --neon: #daff01;
+  --lime: #ecffa3;
+  --seafoam: #c5ffd6;
+  --lavender: #ffcffe;
+  --magenta: #ffacfe;
+  --coral: #ff7f59;
+  --bloom: #ff6d6d;
+  --sky: #71adff;
+  --blue: #5882ff;
+  --violet: #756cf5;
 
-  /* --- Dark Mode Surfaces (primary mode) --- */
-  --background: #151618;
-  --surface: #1e1f21;
-  --surface-raised: #27282a;
-  --surface-hover: rgba(255, 255, 255, 0.04);
+  /* --- Dark Mode Palette (Default) --- */
+  --background: #0b0a10;
+  --foreground: #f4f4f7;
+  --surface: #12111c;
+  --surface-raised: #181724;
+  --surface-elevated: #201f2e;
+  --surface-hover: rgba(255, 255, 255, 0.05);
 
-  /* --- Text --- */
-  --text-primary: rgba(255, 255, 255, 0.9);
-  --text-secondary: rgba(255, 255, 255, 0.65);
-  --text-muted: rgba(255, 255, 255, 0.4);
+  --text-primary: #f4f4f7;
+  --text-secondary: #a7a6b8;
+  --text-muted: #6b6980;
 
-  /* --- Borders --- */
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --input-border: rgba(255, 255, 255, 0.12);
+  --border: rgba(85, 83, 104, 0.35);
+  --border-strong: rgba(85, 83, 104, 0.65);
+  --border-dashed: rgba(85, 83, 104, 0.4);
+  --input-border: rgba(85, 83, 104, 0.4);
 
-  /* --- Radii (TickTick shape language) --- */
-  --radius-pill: 999px;
-  --radius-card: 12px;
-  --radius-inner: 8px;
-  --radius-input: 8px;
-  --radius-sm: 4px;
+  --card: #14131f;
+  --card-foreground: #f4f4f7;
+  --popover: #181724;
+  --popover-foreground: #f4f4f7;
 
-  /* --- Shadows --- */
-  --shadow-card: 0 2px 12px 0 rgba(0, 0, 0, 0.35);
-  --shadow-dropdown: 0 5px 20px 0 rgba(0, 0, 0, 0.4);
-  --shadow-modal: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-
-  /* --- Transitions --- */
-  --transition-default: all 0.2s ease;
-  --transition-fast: all 0.15s ease;
-
-  /* --- Glassmorphism --- */
-  --glass-bg: rgba(21, 22, 24, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.07);
-
-  /* --- Shadcn/Radix compatibility tokens --- */
-  --background-css: 222 14% 9%;
-  --foreground: rgba(255, 255, 255, 0.9);
-  --card: #1e1f21;
-  --card-foreground: rgba(255, 255, 255, 0.9);
-  --popover: #27282a;
-  --popover-foreground: rgba(255, 255, 255, 0.9);
-  --primary: #4772fa;
-  --primary-foreground: #ffffff;
-  --secondary: #27282a;
-  --secondary-foreground: rgba(255, 255, 255, 0.65);
-  --muted: #1e1f21;
-  --muted-foreground: rgba(255, 255, 255, 0.4);
-  --accent: rgba(71, 114, 250, 0.15);
-  --accent-foreground: #4772fa;
-  --destructive: hsl(0, 72%, 51%);
+  --primary: #28e99f;
+  --primary-foreground: #000000;
+  --secondary: #1f1e2c;
+  --secondary-foreground: #f4f4f7;
+  --muted: #181724;
+  --muted-foreground: #6b6980;
+  --accent: rgba(40, 233, 159, 0.12);
+  --accent-foreground: #28e99f;
+  --destructive: #ff6d6d;
   --destructive-foreground: #ffffff;
-  --ring: #4772fa;
-  --radius: 0.5rem;
-  --input: #27282a;
-  --border-css: rgba(255, 255, 255, 0.08);
+  --ring: #28e99f;
+  --radius: 8px;
+  --input: #181724;
+
+  /* --- Sidebar Tokens --- */
+  --sidebar-background: #0d0c14;
+  --sidebar-foreground: #f4f4f7;
+  --sidebar-primary: #28e99f;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: rgba(40, 233, 159, 0.1);
+  --sidebar-accent-foreground: #28e99f;
+  --sidebar-border: rgba(85, 83, 104, 0.3);
+  --sidebar-ring: #28e99f;
+
+  /* --- App Frame Textures --- */
+  --app-outer-bg: #07060a;
+  --app-inner-bg: #0d0c14;
+  --glass-bg: rgba(18, 17, 28, 0.85);
+  --glass-border: rgba(85, 83, 104, 0.3);
+
+  /* --- Chart Tokens --- */
+  --chart-1: #28e99f;
+  --chart-2: #daff01;
+  --chart-3: #71adff;
+  --chart-4: #ff7f59;
+  --chart-5: #ffacfe;
 }
 
-/* Light mode overrides (TickTick brand — light is default on ticktick.com) */
+/* Light mode overrides (Greptile light slate aesthetic) */
 .light {
-  --background: #ffffff;
-  --surface: #fafafa;
-  --surface-raised: #f4f4f5;
-  --surface-hover: rgba(0, 0, 0, 0.03);
-  --text-primary: #191919;
-  --text-secondary: rgba(25, 25, 25, 0.8);
-  --text-muted: rgba(25, 25, 25, 0.5);
-  --border: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(0, 0, 0, 0.14);
-  --input-border: #dbdbdb;
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(0, 0, 0, 0.06);
-  --shadow-card: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
-  --shadow-dropdown: 0 5px 20px 0 rgba(25, 25, 25, 0.1);
+  --background: #f0f0f3;
+  --foreground: #14131d;
+  --surface: #ffffff;
+  --surface-raised: #f7f7fa;
+  --surface-elevated: #ffffff;
+  --surface-hover: rgba(0, 0, 0, 0.04);
+
+  --text-primary: #14131d;
+  --text-secondary: #58566b;
+  --text-muted: #8d8a9e;
+
+  --border: rgba(61, 59, 79, 0.15);
+  --border-strong: rgba(61, 59, 79, 0.3);
+  --border-dashed: rgba(61, 59, 79, 0.2);
+  --input-border: rgba(61, 59, 79, 0.2);
 
   --card: #ffffff;
-  --card-foreground: #191919;
+  --card-foreground: #14131d;
   --popover: #ffffff;
-  --popover-foreground: #191919;
-  --secondary: #f4f4f5;
-  --secondary-foreground: rgba(25, 25, 25, 0.8);
-  --muted: #fafafa;
-  --muted-foreground: rgba(25, 25, 25, 0.5);
-  --accent: rgba(71, 114, 250, 0.08);
-  --accent-foreground: #4772fa;
-  --input: #fafafa;
-  --border-css: rgba(0, 0, 0, 0.08);
+  --popover-foreground: #14131d;
+
+  --primary: #16b876;
+  --primary-foreground: #ffffff;
+  --secondary: #ebebee;
+  --secondary-foreground: #14131d;
+  --muted: #f4f4f7;
+  --muted-foreground: #8d8a9e;
+  --accent: rgba(22, 184, 118, 0.1);
+  --accent-foreground: #16b876;
+  --destructive: #e04444;
+  --destructive-foreground: #ffffff;
+  --ring: #16b876;
+  --input: #f7f7fa;
+
+  --sidebar-background: #e9e9ee;
+  --sidebar-foreground: #14131d;
+  --sidebar-primary: #16b876;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(22, 184, 118, 0.12);
+  --sidebar-accent-foreground: #16b876;
+  --sidebar-border: rgba(61, 59, 79, 0.15);
+  --sidebar-ring: #16b876;
+
+  --app-outer-bg: #e2e2e7;
+  --app-inner-bg: #f5f5f8;
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(61, 59, 79, 0.12);
 }
 
 /* ============================================================
@@ -123,18 +152,22 @@
   body {
     background-color: var(--background);
     color: var(--text-primary);
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-      Roboto, Helvetica, Arial, sans-serif;
-    font-size: 16px;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    font-size: 15px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
+    font-family: 'Anybody', 'DM Sans', sans-serif;
     font-weight: 700;
-    line-height: 1.25;
+    letter-spacing: -0.02em;
     color: var(--text-primary);
+  }
+
+  code, kbd, samp, pre {
+    font-family: 'Space Mono', monospace;
   }
 
   input, textarea, select {
@@ -143,132 +176,216 @@
 }
 
 /* ============================================================
-   Utility Layer — ZenPulse brand utilities
+   Greptile Custom Utilities & Pattern Layers
    ============================================================ */
 @layer utilities {
-
-  /* --- Surfaces --- */
-  .bg-zp-bg       { background-color: var(--background); }
-  .bg-zp-surface  { background-color: var(--surface); }
-  .bg-zp-raised   { background-color: var(--surface-raised); }
-
-  /* --- Text --- */
-  .text-zp-primary   { color: var(--text-primary); }
-  .text-zp-secondary { color: var(--text-secondary); }
-  .text-zp-muted     { color: var(--text-muted); }
-
-  /* --- Brand --- */
-  .text-brand   { color: var(--brand-blue); }
-  .bg-brand     { background-color: var(--brand-blue); }
-  .border-brand { border-color: var(--brand-blue); }
-
-  /* --- Borders --- */
-  .border-zp     { border-color: var(--border); }
-  .border-zp-strong { border-color: var(--border-strong); }
-
-  /* --- Cards --- */
-  .card-zp {
-    background-color: var(--surface-raised);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-card);
+  /* --- Background Patterns --- */
+  .bg-grid-pattern {
+    background-image: radial-gradient(rgba(85, 83, 104, 0.25) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
-  /* --- Glassmorphism (TickTick signature nav style) --- */
+  .bg-grid-pattern-dense {
+    background-image: radial-gradient(rgba(85, 83, 104, 0.35) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  .bg-cross-grid {
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 18v4h-4v-4h4zm0-18v4h-4v-4h4zM0 18v4H-4v-4H0zm0-18v4H-4v-4H0z' fill='%23555368' fill-opacity='0.12' fill-rule='evenodd'/%3E%3C/svg%3E");
+  }
+
+  .bg-radial-glow {
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(40, 233, 159, 0.12), transparent 70%);
+  }
+
+  .bg-radial-glow-center {
+    background: radial-gradient(circle at center, rgba(40, 233, 159, 0.1) 0%, transparent 65%);
+  }
+
+  /* --- Technical Hatch Divider --- */
+  .divider-hatch {
+    height: 6px;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 4px,
+      rgba(85, 83, 104, 0.3) 4px,
+      rgba(85, 83, 104, 0.3) 6px
+    );
+  }
+
+  /* --- Greptile Buttons --- */
+  .btn-greptile {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background-color: var(--greptile-green);
+    color: #000000;
+    padding: 0.625rem 1.25rem;
+    border-radius: 4px;
+    border: 1px solid var(--greptile-green);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.15s ease;
+    box-shadow: 0 0 16px rgba(40, 233, 159, 0.25);
+  }
+
+  .btn-greptile:hover:not(:disabled) {
+    background-color: #3ef2ab;
+    border-color: #3ef2ab;
+    box-shadow: 0 0 24px rgba(40, 233, 159, 0.45);
+    transform: translateY(-1px);
+  }
+
+  .btn-greptile:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 0 10px rgba(40, 233, 159, 0.3);
+  }
+
+  .btn-greptile-outline {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background-color: rgba(61, 59, 79, 0.25);
+    color: var(--text-primary);
+    padding: 0.625rem 1.25rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.15s ease;
+  }
+
+  .btn-greptile-outline:hover:not(:disabled) {
+    background-color: rgba(40, 233, 159, 0.1);
+    border-color: var(--greptile-green);
+    color: var(--greptile-green);
+  }
+
+  /* --- Chamfered Notch Corners --- */
+  .btn-notch {
+    clip-path: polygon(
+      6px 0%,
+      calc(100% - 6px) 0%,
+      100% 6px,
+      100% calc(100% - 6px),
+      calc(100% - 6px) 100%,
+      6px 100%,
+      0% calc(100% - 6px),
+      0% 6px
+    );
+  }
+
+  /* --- Technical Tags & Badges --- */
+  .badge-tech {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    line-height: 1;
+    border: 1px solid var(--border);
+    background-color: var(--surface);
+    color: var(--text-secondary);
+  }
+
+  .badge-tech-green {
+    border-color: rgba(40, 233, 159, 0.4);
+    background-color: rgba(40, 233, 159, 0.1);
+    color: var(--greptile-green);
+  }
+
+  .badge-tech-neon {
+    border-color: rgba(218, 255, 1, 0.4);
+    background-color: rgba(218, 255, 1, 0.1);
+    color: var(--neon);
+  }
+
+  .badge-tech-coral {
+    border-color: rgba(255, 111, 89, 0.4);
+    background-color: rgba(255, 111, 89, 0.1);
+    color: var(--coral);
+  }
+
+  .badge-tech-sky {
+    border-color: rgba(113, 173, 255, 0.4);
+    background-color: rgba(113, 173, 255, 0.1);
+    color: var(--sky);
+  }
+
+  /* --- Cards & Containers --- */
+  .card-greptile {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-greptile:hover {
+    border-color: rgba(85, 83, 104, 0.6);
+  }
+
+  .card-greptile-interactive:hover {
+    border-color: rgba(40, 233, 159, 0.4);
+    box-shadow: 0 4px 20px -6px rgba(40, 233, 159, 0.15);
+  }
+
+  /* --- Technical Frame Box --- */
+  .frame-tech {
+    position: relative;
+    border: 1px dashed var(--border-dashed);
+  }
+
+  .frame-tech::before {
+    content: '+';
+    position: absolute;
+    top: -9px;
+    left: -6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--greptile-green);
+    line-height: 1;
+  }
+
+  .frame-tech::after {
+    content: '+';
+    position: absolute;
+    bottom: -9px;
+    right: -6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--greptile-green);
+    line-height: 1;
+  }
+
+  /* --- Glass Effect --- */
   .glass {
     background: var(--glass-bg);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--glass-border);
   }
 
-  /* --- Pill button (TickTick shape language) --- */
-  .btn-pill {
-    border-radius: var(--radius-pill);
-    padding: 10px 24px;
-    font-weight: 500;
-    font-size: 15px;
-    transition: var(--transition-default);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-primary {
-    background-color: var(--brand-blue);
-    color: #ffffff;
-    border: none;
-  }
-
-  .btn-primary:hover {
-    background-color: var(--brand-blue-hover);
-  }
-
-  /* TickTick shimmer on primary button hover */
-  .btn-primary::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      105deg,
-      transparent 40%,
-      rgba(255, 255, 255, 0.18) 50%,
-      transparent 60%
-    );
-    transform: translateX(-100%);
-    transition: transform 0.45s ease;
-  }
-
-  .btn-primary:hover::after {
-    transform: translateX(100%);
-  }
-
-  /* --- Active nav indicator (TickTick blue pill) --- */
-  .nav-active {
-    background-color: rgba(71, 114, 250, 0.15);
-    color: var(--brand-blue);
-  }
-
-  .nav-item {
-    transition: var(--transition-default);
-    border-radius: var(--radius-inner);
-  }
-
-  .nav-item:hover {
-    background-color: var(--surface-hover);
-    color: var(--text-primary);
-  }
-
-  /* --- Focus ring (TickTick blue) --- */
-  .focus-ring:focus-visible {
-    outline: 2px solid var(--brand-blue);
-    outline-offset: 2px;
-  }
-
-  /* --- Gradient timer ring --- */
-  .gradient-ring {
-    background: conic-gradient(from 0deg, #4772fa, #6f9bff, #4772fa);
-  }
-
-  .timer-ring {
-    transform-origin: center;
-    transition: stroke-dashoffset 1s ease-in-out;
-  }
-
-  /* --- Scroll-in animation --- */
+  /* --- Animations --- */
   .animate-fade-in {
-    animation: fadeIn 0.3s ease forwards;
+    animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  .animate-slide-up {
-    animation: slideUp 0.3s ease forwards;
-  }
-
-  .animate-pulse-slow {
-    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .animate-spin-slow {
-    animation: spin 3s linear infinite;
+  .animate-scale-in {
+    animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 }
 
@@ -276,21 +393,21 @@
    Keyframes
    ============================================================ */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
 /* ============================================================
-   Scrollbar — subtle dark style
+   Scrollbars
    ============================================================ */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -298,56 +415,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 99px;
+  background: rgba(85, 83, 104, 0.35);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
-}
-
-/* ============================================================
-   Tailwind CSS variable bridge
-   (keeps shadcn/Radix components working)
-   ============================================================ */
-@layer base {
-  :root {
-    --background: 222 14% 9%;
-    --foreground: 0 0% 90%;
-    --card: 222 12% 12%;
-    --card-foreground: 0 0% 90%;
-    --popover: 222 12% 15%;
-    --popover-foreground: 0 0% 90%;
-    --primary: 224 93% 62%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 222 12% 15%;
-    --secondary-foreground: 0 0% 65%;
-    --muted: 222 12% 12%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 224 93% 62% / 0.15;
-    --accent-foreground: 224 93% 62%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 100% / 0.08;
-    --input: 222 12% 15%;
-    --ring: 224 93% 62%;
-    --radius: 0.5rem;
-  }
-
-  .light {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 50%;
-    --muted: 0 0% 98%;
-    --muted-foreground: 0 0% 50%;
-    --accent: 224 93% 62% / 0.08;
-    --accent-foreground: 224 93% 62%;
-    --border: 0 0% 0% / 0.08;
-    --input: 0 0% 98%;
-  }
+  background: rgba(40, 233, 159, 0.5);
 }

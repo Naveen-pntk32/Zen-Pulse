@@ -1,6 +1,8 @@
-import { Settings, X } from "lucide-react";
+import { Settings, X, Bell, Volume2 } from "lucide-react";
 import { useState } from "react";
 import { useSettings, useUpdateSettings } from "@/services/settings.service";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 function TimerSettings() {
@@ -15,159 +17,130 @@ function TimerSettings() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-150"
-        style={{ color: "var(--text-muted)" }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--surface-hover)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; }}
+        className="p-2 rounded-[4px] border border-border/80 bg-surface text-muted-foreground hover:text-greptile-green hover:border-greptile-green/50 hover:bg-greptile-green/5 transition-all cursor-pointer"
         aria-label="Timer settings"
+        title="Timer Options"
       >
         <Settings className="w-4 h-4" />
       </button>
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.6)" }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
           onClick={(e) => e.target === e.currentTarget && setOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-2xl p-6 animate-slide-up"
-            style={{
-              background: "var(--surface-raised)",
-              border:     "1px solid var(--border-strong)",
-              boxShadow:  "var(--shadow-modal)",
-            }}
+            className="w-full max-w-md rounded-[8px] p-6 bg-surface-elevated border border-border shadow-2xl animate-scale-in space-y-6"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-semibold" style={{ color: "var(--text-primary)" }}>
-                Timer Settings
-              </h3>
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-border/40">
+              <div className="flex items-center gap-2">
+                <Settings className="w-4 h-4 text-greptile-green" />
+                <h3 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">
+                  Timer Configuration
+                </h3>
+              </div>
               <button
                 onClick={() => setOpen(false)}
-                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-                style={{ color: "var(--text-muted)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--surface-hover)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; }}
+                className="p-1 rounded-[3px] text-muted-foreground hover:text-foreground hover:bg-surface-hover transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-5">
-              {/* Focus Time */}
+            {/* Duration Sliders */}
+            <div className="space-y-4 rounded-[6px] p-4 bg-surface border border-border/60">
+              {/* Focus Duration */}
               <div className="space-y-1.5">
-                <div className="flex justify-between text-sm">
-                  <span style={{ color: "var(--text-secondary)" }}>Focus Time</span>
-                  <span className="font-mono font-medium" style={{ color: "var(--text-primary)" }}>
-                    {settings.focusDuration} min
-                  </span>
+                <div className="flex justify-between text-xs font-mono">
+                  <span className="text-muted-foreground uppercase">FOCUS DURATION</span>
+                  <span className="text-greptile-green font-bold">{settings.focusDuration} MINS</span>
                 </div>
                 <input
-                  type="range"
-                  min="5" max="60" step="5"
+                  type="range" min="5" max="90" step="5"
                   value={settings.focusDuration}
                   onChange={(e) => set({ focusDuration: Number(e.target.value) })}
-                  className="w-full accent-indigo-500"
-                  style={{ accentColor: "var(--brand-blue)" }}
+                  className="w-full accent-greptile-green cursor-pointer"
                 />
               </div>
 
-              {/* Break Time */}
+              {/* Short Break */}
               <div className="space-y-1.5">
-                <div className="flex justify-between text-sm">
-                  <span style={{ color: "var(--text-secondary)" }}>Break Time</span>
-                  <span className="font-mono font-medium" style={{ color: "var(--text-primary)" }}>
-                    {settings.breakDuration} min
-                  </span>
+                <div className="flex justify-between text-xs font-mono">
+                  <span className="text-muted-foreground uppercase">SHORT BREAK</span>
+                  <span className="text-sky font-bold">{settings.breakDuration} MINS</span>
                 </div>
                 <input
-                  type="range"
-                  min="1" max="15" step="1"
+                  type="range" min="1" max="15" step="1"
                   value={settings.breakDuration}
                   onChange={(e) => set({ breakDuration: Number(e.target.value) })}
-                  className="w-full"
-                  style={{ accentColor: "var(--brand-blue)" }}
+                  className="w-full accent-sky cursor-pointer"
                 />
               </div>
 
               {/* Long Break */}
               <div className="space-y-1.5">
-                <div className="flex justify-between text-sm">
-                  <span style={{ color: "var(--text-secondary)" }}>Long Break</span>
-                  <span className="font-mono font-medium" style={{ color: "var(--text-primary)" }}>
-                    {settings.longBreakDuration} min
-                  </span>
+                <div className="flex justify-between text-xs font-mono">
+                  <span className="text-muted-foreground uppercase">LONG BREAK</span>
+                  <span className="text-lavender font-bold">{settings.longBreakDuration} MINS</span>
                 </div>
                 <input
-                  type="range"
-                  min="10" max="30" step="5"
+                  type="range" min="10" max="45" step="5"
                   value={settings.longBreakDuration}
                   onChange={(e) => set({ longBreakDuration: Number(e.target.value) })}
-                  className="w-full"
-                  style={{ accentColor: "var(--brand-blue)" }}
+                  className="w-full accent-lavender cursor-pointer"
                 />
               </div>
 
-              <div className="pt-4 border-t space-y-4" style={{ borderColor: "var(--border)" }}>
-                {/* Sound Alerts */}
-                <label className="flex items-center justify-between cursor-pointer">
-                  <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                    Sound Alerts
-                  </span>
-                  <div
-                    className={cn(
-                      "w-9 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out",
-                      settings.soundEnabled ? "bg-brand" : "bg-zp-surface border border-zp"
-                    )}
-                    style={{
-                      background: settings.soundEnabled ? "var(--brand-blue)" : "var(--surface)",
-                      borderColor: settings.soundEnabled ? "transparent" : "var(--border-strong)",
-                    }}
-                    onClick={() => set({ soundEnabled: !settings.soundEnabled })}
-                  >
-                    <div
-                      className={cn(
-                        "w-4 h-4 rounded-full bg-white transition-transform duration-200 shadow-sm",
-                        settings.soundEnabled ? "translate-x-4" : "translate-x-0"
-                      )}
-                    />
-                  </div>
-                </label>
-
-                {/* Web Notifications */}
-                <label className="flex items-center justify-between cursor-pointer">
-                  <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                    Web Notifications
-                  </span>
-                  <div
-                    className={cn(
-                      "w-9 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out",
-                      settings.notificationsEnabled ? "bg-brand" : "bg-zp-surface border border-zp"
-                    )}
-                    style={{
-                      background: settings.notificationsEnabled ? "var(--brand-blue)" : "var(--surface)",
-                      borderColor: settings.notificationsEnabled ? "transparent" : "var(--border-strong)",
-                    }}
-                    onClick={() => set({ notificationsEnabled: !settings.notificationsEnabled })}
-                  >
-                    <div
-                      className={cn(
-                        "w-4 h-4 rounded-full bg-white transition-transform duration-200 shadow-sm",
-                        settings.notificationsEnabled ? "translate-x-4" : "translate-x-0"
-                      )}
-                    />
-                  </div>
-                </label>
+              {/* Sessions until long break */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs font-mono">
+                  <span className="text-muted-foreground uppercase">POMOS PER LONG BREAK</span>
+                  <span className="text-neon font-bold">{settings.sessionsUntilLongBreak} CYCLES</span>
+                </div>
+                <input
+                  type="range" min="2" max="8" step="1"
+                  value={settings.sessionsUntilLongBreak}
+                  onChange={(e) => set({ sessionsUntilLongBreak: Number(e.target.value) })}
+                  className="w-full accent-neon cursor-pointer"
+                />
               </div>
             </div>
-            
-            <div className="mt-6 flex justify-end">
-              <button
+
+            {/* Notification Toggles */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between p-3 rounded-[4px] border border-border/60 bg-surface">
+                <div className="flex items-center gap-2.5">
+                  <Volume2 className="w-4 h-4 text-greptile-green" />
+                  <span className="text-xs font-sans text-foreground font-medium">Audio Completion Chime</span>
+                </div>
+                <Switch
+                  checked={settings.soundEnabled}
+                  onCheckedChange={(c) => set({ soundEnabled: c })}
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-[4px] border border-border/60 bg-surface">
+                <div className="flex items-center gap-2.5">
+                  <Bell className="w-4 h-4 text-sky" />
+                  <span className="text-xs font-sans text-foreground font-medium">Desktop Web Notifications</span>
+                </div>
+                <Switch
+                  checked={settings.notificationsEnabled}
+                  onCheckedChange={(c) => set({ notificationsEnabled: c })}
+                />
+              </div>
+            </div>
+
+            {/* Close Button */}
+            <div className="flex justify-end pt-2 border-t border-border/40">
+              <Button
+                variant="default"
+                size="sm"
                 onClick={() => setOpen(false)}
-                className="btn-pill btn-primary px-5 py-2 text-sm"
               >
-                Done
-              </button>
+                Apply & Close
+              </Button>
             </div>
           </div>
         </div>

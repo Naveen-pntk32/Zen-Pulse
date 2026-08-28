@@ -2,41 +2,32 @@ import { AchievementRing } from "@/components/pomodoro/AchievementRing";
 import { formatHours } from "@/lib/date";
 
 const PERIOD_LABELS = {
-  day: "Today",
-  week: "This Week",
-  month: "This Month",
+  day: "TODAY'S TARGET",
+  week: "WEEKLY TARGET",
+  month: "MONTHLY TARGET",
 };
 
 function FocusSummaryCard({ period, totalSeconds, goalSeconds, achievementPercent }) {
   const isComplete = achievementPercent >= 100;
 
   return (
-    <div className="flex items-center gap-6 p-1">
+    <div className="flex items-center gap-5 p-4 rounded-[6px] border border-border/60 bg-surface/40">
       <AchievementRing percent={achievementPercent} />
-      <div className="space-y-1">
-        <div
-          className="text-[11px] font-semibold uppercase tracking-widest"
-          style={{ color: "var(--text-muted)" }}
-        >
-          {PERIOD_LABELS[period] ?? "Focus"}
+      <div className="space-y-1 min-w-0">
+        <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
+          {PERIOD_LABELS[period] ?? "FOCUS STATS"}
         </div>
-        <div
-          className="text-3xl font-bold font-mono tracking-tight"
-          style={{ color: "var(--text-primary)" }}
-        >
+        <div className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-foreground">
           {formatHours(totalSeconds)}
         </div>
-        <div className="text-xs" style={{ color: "var(--text-muted)" }}>
-          Focus Goal{" "}
-          <span className="font-mono font-medium ml-1" style={{ color: "var(--text-secondary)" }}>
-            {formatHours(goalSeconds)}
-          </span>
+        <div className="text-xs font-mono text-muted-foreground flex items-center gap-1.5">
+          <span>GOAL:</span>
+          <span className="font-bold text-foreground">{formatHours(goalSeconds)}</span>
         </div>
-        <div
-          className="text-xs font-semibold uppercase tracking-wider mt-1"
-          style={{ color: isComplete ? "#4ade80" : "var(--brand-blue)" }}
-        >
-          Achievement {achievementPercent}%
+        <div className="pt-1">
+          <span className={isComplete ? "badge-tech badge-tech-green" : "badge-tech badge-tech-sky"}>
+            {achievementPercent}% ACHIEVED
+          </span>
         </div>
       </div>
     </div>

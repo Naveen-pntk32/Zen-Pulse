@@ -3,23 +3,18 @@ import { cn } from "@/lib/utils";
 
 function IconPicker({ value, onChange }) {
   return (
-    <div className="grid grid-cols-8 gap-1.5">
+    <div className="grid grid-cols-6 sm:grid-cols-8 gap-1.5 p-2 rounded-[4px] bg-surface border border-border">
       {HABIT_ICONS.map((icon) => (
         <button
           key={icon}
           type="button"
           onClick={() => onChange(icon)}
-          className="w-9 h-9 rounded-lg text-lg flex items-center justify-center transition-colors duration-150"
-          style={{
-            border:     `1px solid ${value === icon ? "var(--brand-blue)" : "var(--border)"}`,
-            background: value === icon ? "rgba(71,114,250,0.12)" : "var(--surface)",
-          }}
-          onMouseEnter={(e) => {
-            if (value !== icon) e.currentTarget.style.borderColor = "var(--border-strong)";
-          }}
-          onMouseLeave={(e) => {
-            if (value !== icon) e.currentTarget.style.borderColor = "var(--border)";
-          }}
+          className={cn(
+            "w-8 h-8 rounded-[3px] text-sm flex items-center justify-center transition-all cursor-pointer",
+            value === icon
+              ? "bg-greptile-green/20 border border-greptile-green shadow-[0_0_8px_rgba(40,233,159,0.3)]"
+              : "bg-surface-raised border border-border/40 hover:border-border-strong hover:bg-surface-hover"
+          )}
         >
           {icon}
         </button>

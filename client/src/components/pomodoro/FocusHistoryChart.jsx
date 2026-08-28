@@ -6,42 +6,41 @@ function FocusHistoryChart({ data }) {
     hours: +(d.seconds / 3600).toFixed(2),
   }));
 
-  // Read CSS var values roughly for chart
-  const brandBlue = "#4772fa";
-  const brandBlueMuted = "rgba(71,114,250,0.5)";
-  const surface = "#1f2228"; // approximate
-  const border = "#2d333b"; // approximate
-  const textMuted = "#6b7280";
+  const brandMint = "#28e99f";
+  const brandMintMuted = "rgba(40, 233, 159, 0.4)";
+  const surface = "#181724";
+  const border = "rgba(85, 83, 104, 0.5)";
+  const textMuted = "#6b6980";
 
   return (
-    <div className="w-full h-40 mt-2">
+    <div className="w-full h-40 mt-2 p-2 rounded-[4px] border border-border/40 bg-surface/30">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
+        <BarChart data={chartData} margin={{ top: 8, right: 4, left: -20, bottom: 0 }}>
           <XAxis
             dataKey="label"
-            tick={{ fill: textMuted, fontSize: 11, fontWeight: 500 }}
+            tick={{ fill: textMuted, fontSize: 10, fontFamily: "Space Mono", fontWeight: 600 }}
             axisLine={false}
             tickLine={false}
-            dy={8}
+            dy={6}
           />
           <Tooltip
-            cursor={{ fill: "rgba(255,255,255,0.04)" }}
+            cursor={{ fill: "rgba(255,255,255,0.03)" }}
             contentStyle={{
               backgroundColor: surface,
               border: `1px solid ${border}`,
-              borderRadius: "12px",
-              color: "#e5e7eb",
-              fontSize: "12px",
-              fontWeight: 500,
-              boxShadow: "0 8px 24px rgba(0,0,0,0.4)"
+              borderRadius: "4px",
+              color: "#f4f4f7",
+              fontFamily: "Space Mono",
+              fontSize: "11px",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.5)"
             }}
-            formatter={(value) => [`${value} hrs`, "Focus"]}
+            formatter={(value) => [`${value} hrs`, "FOCUS DURATION"]}
           />
-          <Bar dataKey="hours" radius={[4, 4, 0, 0]}>
+          <Bar dataKey="hours" radius={[3, 3, 0, 0]}>
             {chartData.map((_, i) => (
               <Cell
                 key={i}
-                fill={i === chartData.length - 1 ? brandBlue : brandBlueMuted}
+                fill={i === chartData.length - 1 ? brandMint : brandMintMuted}
               />
             ))}
           </Bar>

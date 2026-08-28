@@ -1,40 +1,33 @@
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Zap } from "lucide-react";
 import { formatDayLabel, formatTimeHM } from "@/lib/date";
 
 function AutoCheckInEvent({ events }) {
-  if (events.length === 0) return null;
+  if (!events || events.length === 0) return null;
 
   return (
     <div className="pt-2">
-      <h4
-        className="text-[11px] font-semibold uppercase tracking-widest mb-3 flex items-center gap-1.5"
-        style={{ color: "var(--text-muted)" }}
-      >
-        <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "#4ade80" }} />
-        Auto Check-in
-      </h4>
-      <div className="space-y-2">
-        {events.slice(0, 5).map((event, i) => (
+      <div className="flex items-center justify-between pb-1.5 mb-2.5 border-b border-border/40">
+        <h4 className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1.5">
+          <Zap className="w-3 h-3 text-greptile-green fill-greptile-green" />
+          AUTO CHECK-IN LOG
+        </h4>
+        <span className="badge-tech badge-tech-green text-[9px] py-0">
+          AUTOMATED
+        </span>
+      </div>
+
+      <div className="space-y-1.5">
+        {events.slice(0, 4).map((event, i) => (
           <div
             key={i}
-            className="flex items-center gap-3 text-sm rounded-xl px-3.5 py-2.5 transition-colors duration-150"
-            style={{
-              background: "rgba(74,222,128,0.06)",
-              border:     "1px solid rgba(74,222,128,0.2)",
-            }}
+            className="flex items-center gap-2.5 text-xs rounded-[4px] px-3 py-2 border border-greptile-green/30 bg-greptile-green/5"
           >
-            <span style={{ color: "#4ade80" }}>✅</span>
+            <CheckCircle2 className="w-3.5 h-3.5 text-greptile-green shrink-0" />
             <div className="flex-1 min-w-0">
-              <div
-                className="text-[13px] font-medium truncate"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <div className="text-xs font-medium text-foreground truncate">
                 {event.habitName}
               </div>
-              <div
-                className="text-[11px] mt-0.5"
-                style={{ color: "var(--text-muted)" }}
-              >
+              <div className="text-[10px] font-mono text-muted-foreground mt-0.5">
                 {formatDayLabel(event.date)} · {formatTimeHM(new Date(event.completedAt))}
               </div>
             </div>

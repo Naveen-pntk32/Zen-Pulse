@@ -1,53 +1,12 @@
+import { cn } from "@/lib/utils";
+
 const DATE_OPTIONS = [
-  { value: "all",    label: "All Dates"     },
-  { value: "today",  label: "Today"          },
-  { value: "7",      label: "Last 7 Days"    },
-  { value: "30",     label: "Last 30 Days"   },
-  { value: "custom", label: "Custom Range"   },
+  { value: "all",    label: "ALL TIME"     },
+  { value: "today",  label: "TODAY"        },
+  { value: "7",      label: "LAST 7D"      },
+  { value: "30",     label: "LAST 30D"     },
+  { value: "custom", label: "CUSTOM RANGE" },
 ];
-
-function FilterSelect({ id, value, onChange, options, placeholder }) {
-  return (
-    <select
-      id={id}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="text-sm rounded-lg px-3 py-2 outline-none transition-colors duration-150 cursor-pointer"
-      style={{
-        background:   "var(--surface-raised)",
-        border:       "1px solid var(--border)",
-        color:        "var(--text-primary)",
-      }}
-      onFocus={(e)  => (e.target.style.borderColor = "var(--brand-blue)")}
-      onBlur={(e)   => (e.target.style.borderColor = "var(--border)")}
-    >
-      {options.map((o) => (
-        <option key={o.value} value={o.value} style={{ background: "var(--surface-raised)" }}>
-          {o.label}
-        </option>
-      ))}
-    </select>
-  );
-}
-
-function DateInput({ id, value, onChange }) {
-  return (
-    <input
-      id={id}
-      type="date"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="text-sm rounded-lg px-3 py-2 outline-none [color-scheme:dark] transition-colors duration-150"
-      style={{
-        background:   "var(--surface-raised)",
-        border:       "1px solid var(--border)",
-        color:        "var(--text-primary)",
-      }}
-      onFocus={(e)  => (e.target.style.borderColor = "var(--brand-blue)")}
-      onBlur={(e)   => (e.target.style.borderColor = "var(--border)")}
-    />
-  );
-}
 
 function CompletedFilters({
   lists,
@@ -57,36 +16,66 @@ function CompletedFilters({
   customTo,     onCustomTo,
 }) {
   const listOptions = [
-    { value: "all", label: "All Lists" },
-    ...(lists ?? []).map((l) => ({ value: l.id, label: `${l.icon || "📋"} ${l.name}` })),
+    { value: "all", label: "ALL LISTS" },
+    ...(lists ?? []).map((l) => ({ value: l.id, label: `${l.icon || "📋"} ${l.name.toUpperCase()}` })),
   ];
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {/* Date filter */}
-      <FilterSelect
-        id="completed-date-filter"
-        value={dateFilter}
-        onChange={onDateFilter}
-        options={DATE_OPTIONS}
-      />
+    <div className="flex flex-wrap items-center gap-2 p-3 rounded-[6px] border border-border/60 bg-surface/40">
+      {/* Date filter buttons */}
+      <div className="flex flex-wrap items-center gap-1">
+        {DATE_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => onDateFilter(opt.value)}
+            className={cn(
+              "px-2.5 py-1 rounded-[3px] text-[10px] font-mono uppercase tracking-wider font-semibold transition-all cursor-pointer",
+              dateFilter === opt.value
+                ? "bg-greptile-green text-black shadow-[0_0_8px_rgba(40,233,159,0.3)]"
+                : "bg-surface border border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
+            )}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
 
       {/* Custom date range */}
       {dateFilter === "custom" && (
-        <>
-          <DateInput id="completed-from-date" value={customFrom} onChange={onCustomFrom} />
-          <span className="text-xs" style={{ color: "var(--text-muted)" }}>to</span>
-          <DateInput id="completed-to-date"   value={customTo}   onChange={onCustomTo} />
-        </>
+        <div className="flex items-center gap-1.5 ml-2">
+          <input
+            id="completed-from-date"
+            type="date"
+            value={customFrom}
+            onChange={(e) => onCustomFrom(e.target.value)}
+            className="text-[11px] font-mono rounded-[3px] px-2 py-1 bg-surface border border-input-border text-foreground [color-scheme:dark] outline-none focus:border-greptile-green"
+          />
+          <span className="text-[10px] font-mono text-muted-foreground uppercase">TO</span>
+          <input
+            id="completed-to-date"
+            type="date"
+            value={customTo}
+            onChange={(e) => onCustomTo(e.target.value)}
+            className="text-[11px] font-mono rounded-[3px] px-2 py-1 bg-surface border border-input-border text-foreground [color-scheme:dark] outline-none focus:border-greptile-green"
+          />
+        </div>
       )}
 
       {/* List filter */}
-      <FilterSelect
-        id="completed-list-filter"
-        value={listFilter}
-        onChange={onListFilter}
-        options={listOptions}
-      />
+      <div className="ml-auto">
+        <select
+          id="completed-list-filter"
+          value={listFilter}
+          onChange={(e) => onListFilter(e.target.value)}
+          className="text-[11px] font-mono uppercase tracking-wider rounded-[3px] px-2.5 py-1 bg-surface border border-input-border text-foreground outline-none focus:border-greptile-green cursor-pointer"
+        >
+          {listOptions.map((o) => (
+            <option key={o.value} value={o.value} className="bg-surface-elevated text-foreground">
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }

@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 import { useUpdateTask, useDeleteTask } from "@/services/task.service";
 
 const PRIORITY_CONFIG = {
-  low:    { color: "#60a5fa", label: "Low",    bg: "rgba(96,165,250,0.12)"  },
-  medium: { color: "#f59e0b", label: "Medium", bg: "rgba(245,158,11,0.12)" },
-  high:   { color: "#ef4444", label: "High",   bg: "rgba(239,68,68,0.12)"  },
+  low:    { color: "#71adff", label: "LOW",  bg: "rgba(113,173,255,0.12)", border: "rgba(113,173,255,0.3)" },
+  medium: { color: "#daff01", label: "MED",  bg: "rgba(218,255,1,0.12)",   border: "rgba(218,255,1,0.3)" },
+  high:   { color: "#ff6d6d", label: "HIGH", bg: "rgba(255,109,109,0.12)", border: "rgba(255,109,109,0.3)" },
 };
 
 function TaskItem({ task, listIcon }) {
@@ -53,27 +53,26 @@ function TaskItem({ task, listIcon }) {
     <div
       id={`task-item-${task.id}`}
       className={cn(
-        "group flex items-start gap-3 px-4 py-3 rounded-xl border transition-all duration-150",
-        isCompleted ? "opacity-55" : "hover:border-white/[0.14]",
+        "group flex items-start gap-3 px-4 py-3 rounded-[6px] border transition-all duration-150 relative",
+        isCompleted
+          ? "bg-surface/60 border-border/40 opacity-60"
+          : "bg-surface-raised border-border/80 hover:border-greptile-green/40 hover:bg-surface-elevated",
         deleting && "opacity-30 pointer-events-none"
       )}
-      style={{
-        background: isCompleted ? "var(--surface)" : "var(--surface-raised)",
-        borderColor: "var(--border)",
-      }}
     >
       {/* Checkbox */}
       <button
         id={`task-toggle-${task.id}`}
         onClick={handleToggle}
-        className="mt-0.5 shrink-0 w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all duration-150"
-        style={{
-          borderColor: isCompleted ? "var(--brand-blue)" : "var(--border-strong)",
-          background:  isCompleted ? "var(--brand-blue)" : "transparent",
-        }}
+        className={cn(
+          "mt-0.5 shrink-0 w-[18px] h-[18px] rounded-[3px] border flex items-center justify-center transition-all duration-150 cursor-pointer",
+          isCompleted
+            ? "border-greptile-green bg-greptile-green text-black shadow-[0_0_8px_rgba(40,233,159,0.4)]"
+            : "border-border-strong hover:border-greptile-green bg-surface"
+        )}
         aria-label={isCompleted ? "Mark pending" : "Mark complete"}
       >
-        {isCompleted && <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />}
+        {isCompleted && <Check className="w-3 h-3 stroke-[3]" />}
       </button>
 
       {/* Content */}
@@ -85,20 +84,15 @@ function TaskItem({ task, listIcon }) {
             onChange={(e) => setDraft(e.target.value)}
             onBlur={saveEdit}
             onKeyDown={(e) => { if (e.key === "Enter") saveEdit(); if (e.key === "Escape") setEditing(false); }}
-            className="w-full bg-transparent text-sm outline-none py-0.5"
-            style={{
-              color: "var(--text-primary)",
-              borderBottom: "1px solid var(--brand-blue)",
-            }}
+            className="w-full bg-surface border border-greptile-green rounded-[3px] px-2 py-0.5 text-sm text-foreground outline-none font-sans"
             autoFocus
           />
         ) : (
           <div
             className={cn(
-              "text-sm break-words cursor-text leading-snug",
-              isCompleted && "line-through"
+              "text-sm font-medium break-words cursor-text leading-snug font-sans",
+              isCompleted && "line-through text-muted-foreground"
             )}
-            style={{ color: isCompleted ? "var(--text-muted)" : "var(--text-primary)" }}
             onDoubleClick={() => { setDraft(task.title); setEditing(true); }}
           >
             {task.title}
@@ -112,17 +106,20 @@ function TaskItem({ task, listIcon }) {
           )}
           {dueLabel && (
             <span
-              className="flex items-center gap-1 text-[11px]"
-              style={{ color: "var(--text-muted)" }}
+              className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground bg-surface px-1.5 py-0.5 rounded-[2px] border border-border/60"
             >
-              <Calendar className="w-3 h-3" />
+              <Calendar className="w-2.5 h-2.5" />
               {dueLabel}
             </span>
           )}
           {task.priority && (
             <span
-              className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md"
-              style={{ color: priority.color, background: priority.bg }}
+              className="flex items-center gap-1 text-[9px] font-mono uppercase tracking-widest font-bold px-1.5 py-0.5 rounded-[2px] border"
+              style={{
+                color: priority.color,
+                backgroundColor: priority.bg,
+                borderColor: priority.border,
+              }}
             >
               <Flag className="w-2.5 h-2.5" />
               {priority.label}
@@ -132,14 +129,11 @@ function TaskItem({ task, listIcon }) {
       </div>
 
       {/* Action buttons — visible on hover */}
-      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0">
+      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0">
         <button
           id={`task-edit-btn-${task.id}`}
           onClick={() => { setDraft(task.title); setEditing(true); }}
-          className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors duration-150"
-          style={{ color: "var(--text-muted)" }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--surface-hover)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; }}
+          className="p-1 rounded-[3px] text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
           aria-label="Edit task"
         >
           <Pencil className="w-3.5 h-3.5" />
@@ -147,10 +141,7 @@ function TaskItem({ task, listIcon }) {
         <button
           id={`task-delete-btn-${task.id}`}
           onClick={handleDelete}
-          className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors duration-150"
-          style={{ color: "var(--text-muted)" }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "#f87171"; e.currentTarget.style.background = "rgba(239,68,68,0.08)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; }}
+          className="p-1 rounded-[3px] text-muted-foreground hover:text-bloom hover:bg-bloom/10 transition-colors"
           aria-label="Delete task"
         >
           <Trash2 className="w-3.5 h-3.5" />

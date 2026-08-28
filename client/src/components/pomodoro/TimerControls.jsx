@@ -1,4 +1,5 @@
-import { Play, Pause, RotateCcw, SkipForward, Square } from "lucide-react";
+import { Play, Pause, SkipForward, Square, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 function TimerControls({
@@ -14,84 +15,87 @@ function TimerControls({
   onStop,
 }) {
   return (
-    <div className="flex flex-col items-center gap-5">
-      {/* Play/Pause Main Button */}
-      <button
-        onClick={() => {
-          if (isActive) onPause();
-          else if (isPaused) onResume();
-          else onStart();
-        }}
-        className={cn(
-          "w-[72px] h-[72px] rounded-full flex items-center justify-center transition-transform duration-150 active:scale-95",
-          "btn-primary" // applies brand-blue, hover, and shimmer from global css
-        )}
-        style={{
-          boxShadow: isActive
-            ? "0 0 0 4px var(--surface-raised), 0 0 0 8px rgba(71,114,250,0.2)"
-            : "var(--shadow-card)",
-        }}
-        aria-label={isActive ? "Pause" : isPaused ? "Resume" : "Start"}
-      >
-        {isActive ? (
-          <Pause className="w-8 h-8 text-white" fill="currentColor" />
-        ) : (
-          <Play className="w-8 h-8 text-white ml-1" fill="currentColor" />
-        )}
-      </button>
-
-      {/* Secondary Controls */}
-      <div className="flex items-center gap-3">
-        {mode === "stopwatch" && hasActiveSession && (
-          <button
-            onClick={onStop}
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-150"
-            style={{
-              background: "var(--surface)",
-              color:      "var(--text-secondary)",
-              border:     "1px solid var(--border)",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--surface-hover)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "var(--surface)"; }}
-            title="Finish and record"
-          >
-            <Square className="w-4 h-4 fill-current" />
-          </button>
-        )}
-        
-        <button
-          onClick={onReset}
-          disabled={!hasActiveSession}
-          className="w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
-          style={{
-            background: "var(--surface)",
-            color:      "var(--text-secondary)",
-            border:     "1px solid var(--border)",
-          }}
-          onMouseEnter={(e) => { if (hasActiveSession) { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--surface-hover)"; } }}
-          onMouseLeave={(e) => { if (hasActiveSession) { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "var(--surface)"; } }}
-          title="Reset (cancels session)"
+    <div className="flex items-center justify-center gap-4 mt-2">
+      {/* Play / Start / Resume / Pause Main Controls */}
+      {!isActive ? (
+        <Button
+          onClick={onStart}
+          variant="default"
+          size="lg"
+          className="h-12 px-8 text-sm gap-2 shadow-[0_0_24px_rgba(40,233,159,0.35)]"
         >
-          <RotateCcw className="w-4 h-4" />
-        </button>
-
-        {mode === "pomodoro" && hasActiveSession && (
-          <button
-            onClick={onSkip}
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-150"
-            style={{
-              background: "var(--surface)",
-              color:      "var(--text-secondary)",
-              border:     "1px solid var(--border)",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--surface-hover)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "var(--surface)"; }}
-            title="Skip (record full duration)"
+          <Play className="w-4 h-4 fill-black" />
+          <span>START {mode.toUpperCase()}</span>
+        </Button>
+      ) : isPaused ? (
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={onResume}
+            variant="default"
+            size="lg"
+            className="h-11 px-6 text-xs gap-2"
           >
-            <SkipForward className="w-4 h-4" />
-          </button>
-        )}
-      </div>
+            <Play className="w-3.5 h-3.5 fill-black" />
+            <span>RESUME</span>
+          </Button>
+          
+          <Button
+            onClick={mode === "pomodoro" ? onSkip : onStop}
+            variant="outline"
+            size="lg"
+            className="h-11 px-5 text-xs text-bloom hover:border-bloom/60 hover:text-bloom hover:bg-bloom/10"
+          >
+            <Square className="w-3.5 h-3.5 fill-current" />
+            <span>{mode === "pomodoro" ? "SKIP" : "STOP"}</span>
+          </Button>
+
+          <Button
+            onClick={onReset}
+            variant="ghost"
+            size="icon"
+            className="h-11 w-11"
+            title="Reset"
+          >
+            <RotateCcw className="w-4 h-4 text-muted-foreground" />
+          </Button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={onPause}
+            variant="secondary"
+            size="lg"
+            className="h-11 px-6 text-xs gap-2 border-border-strong hover:border-greptile-green/50"
+          >
+            <Pause className="w-3.5 h-3.5 fill-current" />
+            <span>PAUSE</span>
+          </Button>
+
+          {mode === "pomodoro" && (
+            <Button
+              onClick={onSkip}
+              variant="outline"
+              size="lg"
+              className="h-11 px-5 text-xs"
+            >
+              <SkipForward className="w-3.5 h-3.5" />
+              <span>SKIP</span>
+            </Button>
+          )}
+
+          {mode === "stopwatch" && (
+            <Button
+              onClick={onStop}
+              variant="outline"
+              size="lg"
+              className="h-11 px-5 text-xs text-bloom hover:border-bloom/60 hover:text-bloom hover:bg-bloom/10"
+            >
+              <Square className="w-3.5 h-3.5 fill-current" />
+              <span>STOP</span>
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

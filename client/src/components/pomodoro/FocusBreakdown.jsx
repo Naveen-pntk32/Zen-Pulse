@@ -12,16 +12,15 @@ function FocusBreakdown({ items }) {
   if (items.length === 0) {
     return (
       <div
-        className="text-sm text-center py-6 rounded-xl"
-        style={{ color: "var(--text-muted)", background: "var(--surface)" }}
+        className="text-xs font-mono uppercase tracking-wider text-center py-6 rounded-[4px] border border-dashed border-border/60 bg-surface/30 text-muted-foreground"
       >
-        No focus recorded in this period
+        // NO FOCUS SESSIONS RECORDED IN THIS PERIOD
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {items.map((item, index) => {
         const icon =
           item.icon ||
@@ -34,40 +33,32 @@ function FocusBreakdown({ items }) {
         const width = Math.max(6, (item.seconds / maxSeconds) * 100);
 
         return (
-          <div key={`${item.type}:${item.targetName}`} className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <span className="text-lg leading-none">{icon}</span>
-                <span
-                  className="font-medium truncate"
-                  style={{ color: "var(--text-primary)" }}
-                >
+          <div key={`${item.type}:${item.targetName}`} className="space-y-1.5 p-2.5 rounded-[4px] bg-surface/50 border border-border/40">
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-sm leading-none shrink-0">{icon}</span>
+                <span className="font-sans font-medium text-foreground truncate">
                   {item.targetName}
                 </span>
                 {index === 0 && (
-                  <Trophy
-                    className="w-3.5 h-3.5 shrink-0"
-                    style={{ color: "var(--brand-amber)" }}
-                  />
+                  <span className="badge-tech badge-tech-neon text-[9px] px-1 py-0">
+                    TOP
+                  </span>
                 )}
               </div>
-              <span
-                className="font-mono text-xs shrink-0 ml-2 font-medium"
-                style={{ color: "var(--text-secondary)" }}
-              >
+              <span className="font-mono text-xs text-greptile-green shrink-0 ml-2 font-bold">
                 {formatHours(item.seconds)}
               </span>
             </div>
             
             <div
-              className="h-1.5 rounded-full overflow-hidden"
-              style={{ background: "var(--surface)" }}
+              className="h-1 rounded-full overflow-hidden bg-surface-elevated border border-border/40"
             >
               <div
                 className="h-full rounded-full transition-all duration-500"
                 style={{
                   width: `${width}%`,
-                  background: index === 0 ? "var(--brand-blue)" : "var(--text-muted)",
+                  backgroundColor: index === 0 ? "var(--greptile-green)" : "var(--sky)",
                 }}
               />
             </div>

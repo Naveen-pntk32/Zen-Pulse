@@ -9,8 +9,8 @@ function HabitCard({ habit, completion, completions, date, onToggle, disabled })
   
   const goalText =
     habit.goalType === "time"
-      ? `${goalOptionLabel(habit.dailyGoalSeconds)} goal`
-      : "Achieve it all";
+      ? `${goalOptionLabel(habit.dailyGoalSeconds)} GOAL`
+      : "ACHIEVE ALL";
       
   const progress =
     habit.goalType === "time" && habit.dailyGoalSeconds > 0
@@ -25,70 +25,64 @@ function HabitCard({ habit, completion, completions, date, onToggle, disabled })
   return (
     <div
       className={cn(
-        "group flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-150",
-        completed ? "opacity-90" : "hover:border-white/[0.14]"
+        "group flex items-center gap-3 px-4 py-3 rounded-[6px] border transition-all duration-150 relative",
+        completed
+          ? "bg-greptile-green/[0.04] border-greptile-green/30"
+          : "bg-surface-raised border-border/80 hover:border-greptile-green/40 hover:bg-surface-elevated"
       )}
-      style={{
-        background:  completed ? "rgba(74,222,128,0.06)" : "var(--surface-raised)",
-        borderColor: completed ? "rgba(74,222,128,0.3)"  : "var(--border)",
-      }}
     >
       {/* Checkbox */}
       <button
         onClick={() => onToggle(habit)}
         disabled={disabled}
         className={cn(
-          "shrink-0 w-[20px] h-[20px] rounded-full border-2 flex items-center justify-center transition-all duration-150",
-          disabled && "opacity-40 cursor-not-allowed"
+          "shrink-0 w-[18px] h-[18px] rounded-[3px] border flex items-center justify-center transition-all duration-150 cursor-pointer",
+          disabled && "opacity-40 cursor-not-allowed",
+          completed
+            ? "border-greptile-green bg-greptile-green text-black shadow-[0_0_8px_rgba(40,233,159,0.4)]"
+            : "border-border-strong hover:border-greptile-green bg-surface"
         )}
-        style={{
-          borderColor: completed ? "#4ade80" : "var(--border-strong)",
-          background:  completed ? "#4ade80" : "transparent",
-        }}
         aria-label={`Check in ${habit.name}`}
       >
-        {completed && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+        {completed && <Check className="w-3 h-3 stroke-[3]" />}
       </button>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-lg leading-none">{habit.icon || "😊"}</span>
+          <span className="text-base leading-none">{habit.icon || "😊"}</span>
           <span
-            className={cn("font-medium text-[15px] truncate", completed && "line-through")}
-            style={{ color: completed ? "var(--text-muted)" : "var(--text-primary)" }}
+            className={cn("font-medium text-sm font-sans truncate text-foreground", completed && "line-through text-muted-foreground")}
           >
             {habit.name}
           </span>
           {completion?.completedAutomatically && completed && (
             <span
-              className="flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full shrink-0 uppercase tracking-wide"
-              style={{ color: "#4ade80", background: "rgba(74,222,128,0.15)" }}
+              className="badge-tech badge-tech-green text-[9px] py-0"
             >
               <CheckCircle2 className="w-2.5 h-2.5" />
-              Auto
+              AUTO
             </span>
           )}
         </div>
         
         <div
-          className="text-[11px] mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-medium"
-          style={{ color: "var(--text-muted)" }}
+          className="text-[10px] font-mono mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-muted-foreground uppercase"
         >
-          <span>Daily · {goalText}</span>
+          <span>DAILY · {goalText}</span>
           {habit.goalType === "time" && completion && completion.actualFocusSeconds > 0 && (
-            <span style={{ color: "var(--text-secondary)" }}>
-              {formatDuration(completion.actualFocusSeconds)} focused
+            <span className="text-greptile-green font-bold">
+              {formatDuration(completion.actualFocusSeconds)} LOGGED
             </span>
           )}
           {habit.goalType === "time" && (
-            <span style={{ color: "var(--brand-blue)" }}>{progress}%</span>
+            <span className="text-sky font-bold">[{progress}%]</span>
           )}
         </div>
       </div>
 
       {/* Week Dots */}
-      <div className="shrink-0 ml-4 opacity-70 group-hover:opacity-100 transition-opacity">
+      <div className="shrink-0 ml-2">
         <WeekDots habitId={habit.id} endDate={date} completions={completions} />
       </div>
     </div>

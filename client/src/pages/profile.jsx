@@ -11,15 +11,17 @@ import {
   Zap,
   Eye,
   EyeOff,
+  ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useTasks } from "@/services/task.service";
 import { useHabits } from "@/services/habit.service";
 import { useFocusSessions } from "@/services/focus-session.service";
 import { formatDuration, formatDayLabel } from "@/lib/date";
+import { Button } from "@/components/ui/button";
 
 /* ------------------------------------------------------------------ */
-/* Auth Form — TickTick brand styled                                   */
+/* Auth Form — Greptile styled                                         */
 /* ------------------------------------------------------------------ */
 function AuthForm() {
   const { signIn, signUp } = useAuth();
@@ -52,37 +54,31 @@ function AuthForm() {
 
   return (
     <div
-      className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4"
+      className="min-h-[70vh] flex items-center justify-center p-4"
       id="auth-page"
     >
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm space-y-6">
 
         {/* Logo + heading */}
-        <div className="text-center mb-8">
+        <div className="text-center">
           <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-            style={{ background: "var(--brand-blue)" }}
+            className="w-12 h-12 rounded-[6px] bg-greptile-green flex items-center justify-center mx-auto mb-3 shadow-[0_0_20px_rgba(40,233,159,0.35)]"
           >
-            <Zap className="w-7 h-7 text-white" />
+            <Zap className="w-6 h-6 text-black fill-black" />
           </div>
-          <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--text-primary)" }}>
-            {mode === "login" ? "Welcome back" : "Create account"}
+          <h1 className="text-xl font-bold font-display tracking-tight text-foreground">
+            {mode === "login" ? "ACCESS ZENPULSE" : "INITIALIZE ACCOUNT"}
           </h1>
-          <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+          <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground mt-1">
             {mode === "login"
-              ? "Sign in to sync your data across devices"
-              : "Start tracking your focus & habits"}
+              ? "AUTHENTICATE FOR CROSS-DEVICE SYNC"
+              : "COMMENCE FOCUS & HABIT TRACKING"}
           </p>
         </div>
 
         {/* Card */}
         <div
-          className="rounded-2xl p-6 space-y-4"
-          style={{
-            background: "var(--surface-raised)",
-            border: "1px solid var(--border)",
-            boxShadow: "var(--shadow-modal)",
-          }}
+          className="rounded-[8px] p-6 space-y-4 bg-surface-raised border border-border shadow-2xl"
         >
           <form onSubmit={handleSubmit} className="space-y-4" id="auth-form">
 
@@ -90,10 +86,9 @@ function AuthForm() {
             <div className="space-y-1.5">
               <label
                 htmlFor="auth-email"
-                className="text-xs font-medium uppercase tracking-wide"
-                style={{ color: "var(--text-muted)" }}
+                className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold"
               >
-                Email
+                Email Address
               </label>
               <input
                 id="auth-email"
@@ -101,15 +96,8 @@ function AuthForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="you@example.com"
-                className="w-full px-3.5 py-2.5 rounded-lg text-sm outline-none transition-all duration-150"
-                style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--input-border)",
-                  color: "var(--text-primary)",
-                }}
-                onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-                onBlur={(e)  => (e.target.style.borderColor = "var(--input-border)")}
+                placeholder="developer@zenpulse.app"
+                className="w-full px-3 py-2 rounded-[4px] text-xs font-sans bg-surface border border-input-border text-foreground placeholder:text-muted-foreground/60 outline-none focus:border-greptile-green focus:ring-1 focus:ring-greptile-green/40 transition-colors"
               />
             </div>
 
@@ -117,10 +105,9 @@ function AuthForm() {
             <div className="space-y-1.5">
               <label
                 htmlFor="auth-password"
-                className="text-xs font-medium uppercase tracking-wide"
-                style={{ color: "var(--text-muted)" }}
+                className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold"
               >
-                Password
+                Password Key
               </label>
               <div className="relative">
                 <input
@@ -130,78 +117,65 @@ function AuthForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 rounded-lg text-sm outline-none transition-all duration-150 pr-10"
-                  style={{
-                    background: "var(--surface)",
-                    border: "1px solid var(--input-border)",
-                    color: "var(--text-primary)",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-                  onBlur={(e)  => (e.target.style.borderColor = "var(--input-border)")}
+                  placeholder="••••••••••••"
+                  className="w-full px-3 py-2 rounded-[4px] text-xs font-sans bg-surface border border-input-border text-foreground placeholder:text-muted-foreground/60 outline-none focus:border-greptile-green focus:ring-1 focus:ring-greptile-green/40 transition-colors pr-9"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPw((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                  style={{ color: "var(--text-muted)" }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   tabIndex={-1}
                   aria-label={showPw ? "Hide password" : "Show password"}
                 >
-                  {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPw ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
 
             {/* Error / Success messages */}
             {error && (
-              <p className="text-xs px-3 py-2 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", color: "#f87171" }}>
-                {error}
+              <p className="text-xs font-mono p-2.5 rounded-[4px] bg-bloom/10 border border-bloom/40 text-bloom">
+                [ERROR]: {error}
               </p>
             )}
             {success && (
-              <p className="text-xs px-3 py-2 rounded-lg" style={{ background: "rgba(71,114,250,0.1)", color: "var(--brand-blue)" }}>
-                {success}
+              <p className="text-xs font-mono p-2.5 rounded-[4px] bg-greptile-green/10 border border-greptile-green/40 text-greptile-green">
+                [SUCCESS]: {success}
               </p>
             )}
 
             {/* Submit */}
-            <button
+            <Button
               id="auth-submit-btn"
               type="submit"
               disabled={busy}
-              className="btn-pill btn-primary w-full flex items-center justify-center gap-2 text-sm font-semibold"
-              style={{
-                opacity: busy ? 0.7 : 1,
-                cursor: busy ? "not-allowed" : "pointer",
-              }}
+              variant="default"
+              size="lg"
+              className="w-full mt-2"
             >
-              {busy && <Loader2 className="w-4 h-4 animate-spin" />}
-              {mode === "login" ? "Sign In" : "Create Account"}
-            </button>
+              {busy && <Loader2 className="w-4 h-4 animate-spin mr-1" />}
+              <span>{mode === "login" ? "AUTHENTICATE" : "REGISTER ACCOUNT"}</span>
+            </Button>
           </form>
 
           {/* Mode switch */}
-          <div className="text-center pt-1">
+          <div className="text-center pt-2 border-t border-border/40">
             <button
               id="auth-mode-switch"
               type="button"
               onClick={() => { setMode(mode === "login" ? "signup" : "login"); setError(null); setSuccess(null); }}
-              className="text-sm transition-colors duration-150"
-              style={{ color: "var(--text-muted)" }}
-              onMouseEnter={(e) => (e.target.style.color = "var(--brand-blue)")}
-              onMouseLeave={(e) => (e.target.style.color = "var(--text-muted)")}
+              className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-greptile-green transition-colors"
             >
               {mode === "login"
-                ? "Don't have an account? Sign up →"
-                : "Already have an account? Sign in →"}
+                ? "NO ACCOUNT? CREATE ONE →"
+                : "HAVE AN ACCOUNT? SIGN IN →"}
             </button>
           </div>
         </div>
 
-        {/* Tagline below card */}
-        <p className="text-center text-xs mt-5" style={{ color: "var(--text-muted)" }}>
-          Focus · Track · Grow with ZenPulse
+        {/* Tagline */}
+        <p className="text-center text-[10px] font-mono uppercase tracking-widest text-muted-foreground/60">
+          // ZENPULSE ENGINE v2.0 // DEEP WORK ARCHITECTURE
         </p>
       </div>
     </div>
@@ -211,20 +185,16 @@ function AuthForm() {
 /* ------------------------------------------------------------------ */
 /* Stat card helper                                                    */
 /* ------------------------------------------------------------------ */
-function StatCard({ icon: Icon, iconColor, value, label }) {
+function StatCard({ icon: Icon, colorClass, value, label }) {
   return (
     <div
-      className="rounded-2xl p-5 text-center"
-      style={{
-        background: "var(--surface-raised)",
-        border: "1px solid var(--border)",
-      }}
+      className="rounded-[6px] p-4 text-center bg-surface border border-border/80 shadow-sm space-y-1"
     >
-      <Icon className="w-5 h-5 mx-auto mb-2" style={{ color: iconColor }} />
-      <div className="text-2xl font-bold mb-0.5" style={{ color: "var(--text-primary)" }}>
+      <Icon className={`w-4 h-4 mx-auto ${colorClass}`} />
+      <div className="text-xl font-bold font-mono tracking-tight text-foreground">
         {value}
       </div>
-      <div className="text-xs" style={{ color: "var(--text-muted)" }}>
+      <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
         {label}
       </div>
     </div>
@@ -248,71 +218,93 @@ function ProfilePage() {
   const initials           = (user.email ?? "U").slice(0, 2).toUpperCase();
 
   return (
-    <div className="max-w-xl mx-auto animate-fade-in" id="profile-page">
+    <div className="max-w-xl mx-auto space-y-6 animate-fade-in" id="profile-page">
+      {/* Header Banner */}
+      <div className="pb-4 border-b border-border/40">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl md:text-2xl font-bold font-display flex items-center gap-2.5 text-foreground">
+            <UserIcon className="w-5 h-5 text-greptile-green" />
+            User Identity
+          </h1>
+          <span className="badge-tech badge-tech-green">
+            AUTHENTICATED
+          </span>
+        </div>
+      </div>
 
-      {/* Avatar + identity */}
-      <div className="text-center mb-8">
+      {/* Identity Card */}
+      <div className="p-6 rounded-[8px] bg-surface-raised border border-border text-center space-y-3">
         <div
-          className="w-20 h-20 mx-auto rounded-full flex items-center justify-center text-2xl font-bold text-white mb-3"
-          style={{ background: "var(--brand-blue)" }}
+          className="w-16 h-16 mx-auto rounded-[6px] flex items-center justify-center text-xl font-bold font-mono bg-greptile-green text-black shadow-[0_0_16px_rgba(40,233,159,0.35)]"
         >
           {initials}
         </div>
-        <h1 className="text-xl font-bold mb-1" style={{ color: "var(--text-primary)" }}>
-          {user.email ?? "ZenPulse User"}
-        </h1>
-        <div className="flex items-center justify-center gap-4 text-xs" style={{ color: "var(--text-muted)" }}>
-          {user.email && (
-            <span className="flex items-center gap-1">
-              <Mail className="w-3.5 h-3.5" /> {user.email}
-            </span>
-          )}
-          {user.createdAt && (
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5" /> Joined {formatDayLabel(user.createdAt.slice(0, 10))}
-            </span>
-          )}
+        <div>
+          <h2 className="text-base font-bold font-display text-foreground">
+            {user.email ?? "ZenPulse User"}
+          </h2>
+          <div className="flex items-center justify-center gap-4 text-xs font-mono text-muted-foreground mt-1">
+            {user.email && (
+              <span className="flex items-center gap-1">
+                <Mail className="w-3.5 h-3.5" /> {user.email}
+              </span>
+            )}
+            {user.createdAt && (
+              <span className="flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5" /> {formatDayLabel(user.createdAt.slice(0, 10))}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-3 gap-3 mb-8">
+      <div className="grid grid-cols-3 gap-3">
         <StatCard
           icon={CheckSquare}
-          iconColor="var(--brand-blue)"
+          colorClass="text-sky"
           value={(tasks ?? []).length}
           label="Tasks Done"
         />
         <StatCard
           icon={Activity}
-          iconColor="#22c55e"
+          colorClass="text-greptile-green"
           value={(habits ?? []).length}
           label="Habits"
         />
         <StatCard
           icon={Timer}
-          iconColor="var(--brand-amber)"
+          colorClass="text-neon"
           value={formatDuration(totalFocusSeconds)}
           label={`${totalSessionCount} Sessions`}
         />
       </div>
 
+      {/* Cloud Sync Status */}
+      <div className="p-4 rounded-[6px] border border-border/60 bg-surface flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <ShieldCheck className="w-4 h-4 text-greptile-green" />
+          <div>
+            <div className="text-xs font-bold font-sans text-foreground">Supabase Cloud Sync Active</div>
+            <div className="text-[10px] font-mono text-muted-foreground">Session state synced across devices</div>
+          </div>
+        </div>
+        <span className="badge-tech badge-tech-green text-[9px]">
+          ONLINE
+        </span>
+      </div>
+
       {/* Logout */}
-      <button
+      <Button
         id="profile-logout-btn"
+        variant="destructive"
+        size="lg"
         onClick={() => signOut()}
-        className="w-full rounded-xl py-3 text-sm font-medium transition-all duration-150 flex items-center justify-center gap-2"
-        style={{
-          border: "1px solid var(--border)",
-          color: "var(--text-secondary)",
-          background: "transparent",
-        }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = "#f87171"; e.currentTarget.style.background = "rgba(239,68,68,0.06)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "transparent"; }}
+        className="w-full"
       >
-        <LogOut className="w-4 h-4" />
-        Sign out
-      </button>
+        <LogOut className="w-4 h-4 mr-2" />
+        <span>SIGN OUT FROM ZENPULSE</span>
+      </Button>
     </div>
   );
 }

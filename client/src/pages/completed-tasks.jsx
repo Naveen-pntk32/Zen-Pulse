@@ -52,7 +52,7 @@ function CompletedTasksPage() {
   }, [tasks, dateFilter, listFilter, customFrom, customTo]);
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+    <div className="flex flex-col md:flex-row gap-6 md:gap-8 max-w-6xl mx-auto animate-fade-in">
       {/* Secondary nav */}
       <TaskListSidebar />
 
@@ -60,16 +60,18 @@ function CompletedTasksPage() {
       <div className="flex-1 min-w-0">
 
         {/* Header */}
-        <div className="mb-6">
-          <h1
-            className="text-xl font-bold flex items-center gap-2 mb-1"
-            style={{ color: "var(--text-primary)" }}
-          >
-            <CheckCircle2 className="w-5 h-5" style={{ color: "#4ade80" }} />
-            Completed Tasks
-          </h1>
-          <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-            {(tasks ?? []).length} task{(tasks ?? []).length !== 1 ? "s" : ""} completed in total
+        <div className="mb-6 pb-4 border-b border-border/40">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl md:text-2xl font-bold font-display flex items-center gap-2.5 text-foreground">
+              <CheckCircle2 className="w-5 h-5 text-greptile-green" />
+              Completed Archive
+            </h1>
+            <span className="badge-tech badge-tech-green">
+              {(tasks ?? []).length} RESOLVED
+            </span>
+          </div>
+          <p className="text-xs font-sans text-muted-foreground mt-1">
+            Historical log of all resolved tasks grouped by completion date.
           </p>
         </div>
 
@@ -87,23 +89,20 @@ function CompletedTasksPage() {
         {/* Task groups */}
         {isLoading ? (
           <div className="flex justify-center py-16">
-            <Loader2
-              className="w-5 h-5 animate-spin"
-              style={{ color: "var(--brand-blue)" }}
-            />
+            <Loader2 className="w-6 h-6 animate-spin text-greptile-green" />
           </div>
         ) : groups.length === 0 ? (
-          <div className="text-center py-20 space-y-3">
-            <CheckCircle2
-              className="w-12 h-12 mx-auto opacity-20"
-              style={{ color: "var(--text-primary)" }}
-            />
-            <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+          <div className="text-center py-16 px-4 rounded-[6px] border border-dashed border-border/60 bg-surface/30 space-y-3">
+            <CheckCircle2 className="w-10 h-10 mx-auto text-muted-foreground/30" />
+            <p className="text-sm font-bold font-display text-foreground">
               No completed tasks match your filters
+            </p>
+            <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+              Try adjusting the date range or list filter
             </p>
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-6">
             {groups.map(([date, dateTasks]) => (
               <CompletedTaskGroup
                 key={date}

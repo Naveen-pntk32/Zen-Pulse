@@ -3,29 +3,22 @@ import { formatDayWithWeekday } from "@/lib/date";
 
 function CompletedTaskGroup({ date, tasks, lists }) {
   return (
-    <div>
+    <div className="space-y-2">
       {/* Date heading */}
-      <div className="flex items-center gap-2 mb-3">
-        <div className="h-px flex-1" style={{ background: "var(--border)" }} />
-        <span
-          className="text-xs font-semibold px-2"
-          style={{ color: "var(--text-secondary)" }}
-        >
-          {formatDayWithWeekday(date)}
-        </span>
-        <span
-          className="text-xs px-1.5 py-0.5 rounded-full font-medium"
-          style={{
-            color:      "var(--text-muted)",
-            background: "var(--surface-raised)",
-          }}
-        >
-          {tasks.length}
-        </span>
-        <div className="h-px flex-1" style={{ background: "var(--border)" }} />
+      <div className="flex items-center gap-3 py-1">
+        <div className="h-px flex-1 bg-border/40" />
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-mono uppercase tracking-wider font-bold text-muted-foreground">
+            {formatDayWithWeekday(date)}
+          </span>
+          <span className="badge-tech badge-tech-green text-[10px] px-1.5 py-0">
+            {tasks.length}
+          </span>
+        </div>
+        <div className="h-px flex-1 bg-border/40" />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         {tasks.map((task) => (
           <CompletedTaskItem
             key={task.id}

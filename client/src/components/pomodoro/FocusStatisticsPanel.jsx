@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, BarChart2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAnalytics } from "@/services/analytics.service";
 import { FocusSummaryCard } from "@/components/pomodoro/FocusSummaryCard";
@@ -9,9 +9,9 @@ import { AutoCheckInEvent } from "@/components/pomodoro/AutoCheckInEvent";
 import { BestFocusCard } from "@/components/pomodoro/BestFocusCard";
 
 const PERIODS = [
-  { value: "day",   label: "Day" },
-  { value: "week",  label: "Week" },
-  { value: "month", label: "Month" },
+  { value: "day",   label: "DAY" },
+  { value: "week",  label: "WEEK" },
+  { value: "month", label: "MONTH" },
 ];
 
 function FocusStatisticsPanel() {
@@ -20,35 +20,30 @@ function FocusStatisticsPanel() {
 
   return (
     <div
-      className="rounded-3xl p-6 lg:p-8 space-y-8"
-      style={{
-        background: "var(--surface-raised)",
-        border:     "1px solid var(--border)",
-      }}
+      className="rounded-[8px] p-5 sm:p-6 space-y-6 border border-border/80 bg-surface-raised/90 backdrop-blur-md shadow-xl"
     >
       {/* Header & Period Selector */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
-          Focus Statistics
-        </h2>
+      <div className="flex items-center justify-between pb-3 border-b border-border/40">
+        <div className="flex items-center gap-2">
+          <BarChart2 className="w-4 h-4 text-greptile-green" />
+          <h2 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">
+            Productivity Analytics
+          </h2>
+        </div>
         
         <div
-          className="inline-flex rounded-xl p-1 shrink-0"
-          style={{
-            background: "var(--surface)",
-            border:     "1px solid var(--border)",
-          }}
+          className="inline-flex rounded-[4px] p-0.5 bg-surface border border-border"
         >
           {PERIODS.map((p) => (
             <button
               key={p.value}
               onClick={() => setPeriod(p.value)}
-              className="px-4 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150"
-              style={{
-                background: period === p.value ? "var(--brand-blue)" : "transparent",
-                color:      period === p.value ? "#ffffff" : "var(--text-secondary)",
-                boxShadow:  period === p.value ? "var(--shadow-card)" : "none",
-              }}
+              className={cn(
+                "px-3 py-1 rounded-[3px] text-[10px] font-mono uppercase tracking-wider font-semibold transition-all cursor-pointer",
+                period === p.value
+                  ? "bg-greptile-green text-black shadow-[0_0_8px_rgba(40,233,159,0.3)]"
+                  : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
+              )}
             >
               {p.label}
             </button>
@@ -58,13 +53,10 @@ function FocusStatisticsPanel() {
 
       {isLoading || !data ? (
         <div className="flex justify-center py-16">
-          <Loader2
-            className="w-5 h-5 animate-spin"
-            style={{ color: "var(--brand-blue)" }}
-          />
+          <Loader2 className="w-6 h-6 animate-spin text-greptile-green" />
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-6">
           <FocusSummaryCard
             period={period}
             totalSeconds={data.totalSeconds}
@@ -72,29 +64,21 @@ function FocusStatisticsPanel() {
             achievementPercent={data.achievementPercent}
           />
 
-          <div className="pt-2">
-            <h4
-              className="text-[11px] font-semibold uppercase tracking-widest mb-4"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Focus Breakdown
+          <div>
+            <h4 className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold mb-2.5">
+              // FOCUS BREAKDOWN
             </h4>
             <FocusBreakdown items={data.breakdown} />
           </div>
 
-          <div className="pt-2">
-            <h4
-              className="text-[11px] font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Focus History
+          <div>
+            <h4 className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold mb-2">
+              // ACTIVITY TIMELINE
             </h4>
             <FocusHistoryChart data={data.history} />
           </div>
 
-          <div className="pt-2">
-            <BestFocusCard bestFocus={data.bestFocus} />
-          </div>
+          <BestFocusCard bestFocus={data.bestFocus} />
 
           <AutoCheckInEvent events={data.autoCheckIns} />
         </div>

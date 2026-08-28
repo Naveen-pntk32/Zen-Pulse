@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Bell, Plus, Check } from "lucide-react";
+import { Bell, Plus, Check, Sparkles } from "lucide-react";
 import { IconPicker } from "@/components/habits/IconPicker";
 import { goalOptionLabel, HABIT_SECTIONS, TIME_GOAL_OPTIONS } from "@/lib/defaults";
 import { useCreateHabit } from "@/services/habit.service";
 import { getLocalDateKey } from "@/lib/date";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const schema = z.object({
@@ -22,7 +23,7 @@ const schema = z.object({
   autoPopup: z.boolean(),
 });
 
-function AddHabitForm() {
+function AddHabitForm({ onSuccess, onCancel }) {
   const createHabit = useCreateHabit();
   const [goalType, setGoalType] = useState("time");
   const [goalSeconds, setGoalSeconds] = useState(10800);
@@ -73,71 +74,49 @@ function AddHabitForm() {
     reset();
     setGoalType("time");
     setGoalSeconds(10800);
+    if (onSuccess) onSuccess();
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="rounded-3xl p-6 space-y-6"
-      style={{
-        background:  "var(--surface-raised)",
-        border:      "1px solid var(--border)",
-      }}
+      className="rounded-[8px] p-6 space-y-5 bg-surface-raised border border-border shadow-xl min-w-[340px]"
     >
       {/* Header */}
-      <div className="flex items-center gap-2">
-        <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center"
-          style={{ background: "var(--brand-blue)" }}
-        >
-          <Plus className="w-5 h-5 text-white" />
+      <div className="flex items-center justify-between pb-3 border-b border-border/40">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-greptile-green" />
+          <h2 className="text-sm font-bold font-display uppercase tracking-wider text-foreground">
+            Create Habit Routine
+          </h2>
         </div>
-        <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
-          Add Habit
-        </h2>
+        <span className="badge-tech badge-tech-green text-[9px] py-0">
+          STREAK ENGINE
+        </span>
       </div>
 
       {/* Name */}
-      <div className="space-y-2">
-        <label
-          className="text-xs font-semibold uppercase tracking-wide"
-          style={{ color: "var(--text-muted)" }}
-        >
+      <div className="space-y-1.5">
+        <label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
           Habit Name
         </label>
-        <div className="flex items-center gap-3">
-          <div
-            className="text-2xl w-10 h-10 flex items-center justify-center rounded-xl"
-            style={{
-              background: "var(--surface)",
-              border:     "1px solid var(--border)",
-            }}
-          >
+        <div className="flex items-center gap-2.5">
+          <div className="text-xl w-9 h-9 flex items-center justify-center rounded-[4px] bg-surface border border-border shrink-0">
             {icon}
           </div>
           <input
             {...register("name")}
-            placeholder="e.g. Read 10 pages"
-            className="flex-1 px-3.5 py-2.5 rounded-xl text-sm outline-none transition-colors duration-150"
-            style={{
-              background: "var(--surface)",
-              border:     "1px solid var(--input-border)",
-              color:      "var(--text-primary)",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-            onBlur={(e)  => (e.target.style.borderColor = "var(--input-border)")}
+            placeholder="e.g. Read 20 pages, Code review..."
+            className="flex-1 px-3 py-2 rounded-[4px] text-xs font-sans bg-surface border border-input-border text-foreground placeholder:text-muted-foreground/60 outline-none focus:border-greptile-green focus:ring-1 focus:ring-greptile-green/40 transition-colors"
           />
         </div>
-        {errors.name && <p className="text-xs text-red-400">{errors.name.message}</p>}
+        {errors.name && <p className="text-[11px] font-mono text-bloom">{errors.name.message}</p>}
       </div>
 
       {/* Icon Picker */}
-      <div className="space-y-2">
-        <label
-          className="text-xs font-semibold uppercase tracking-wide"
-          style={{ color: "var(--text-muted)" }}
-        >
-          Icon
+      <div className="space-y-1.5">
+        <label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
+          Select Icon
         </label>
         <IconPicker
           value={icon}
@@ -147,48 +126,29 @@ function AddHabitForm() {
 
       {/* Frequency + Section */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-2">
-          <label
-            className="text-xs font-semibold uppercase tracking-wide"
-            style={{ color: "var(--text-muted)" }}
-          >
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
             Frequency
           </label>
           <select
             value={frequency}
             onChange={(e) => setValue("frequency", e.target.value, { shouldValidate: true })}
-            className="w-full text-sm rounded-xl px-3.5 py-2.5 outline-none transition-colors duration-150 cursor-pointer"
-            style={{
-              background: "var(--surface)",
-              border:     "1px solid var(--input-border)",
-              color:      "var(--text-primary)",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-            onBlur={(e)  => (e.target.style.borderColor = "var(--input-border)")}
+            className="w-full text-xs font-mono uppercase tracking-wider rounded-[4px] px-2.5 py-1.5 bg-surface border border-input-border text-foreground outline-none focus:border-greptile-green cursor-pointer"
           >
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
             <option value="custom">Custom</option>
           </select>
         </div>
-        <div className="space-y-2">
-          <label
-            className="text-xs font-semibold uppercase tracking-wide"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Section
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
+            Day Routine Section
           </label>
           <select
             value={section}
             onChange={(e) => setValue("section", e.target.value, { shouldValidate: true })}
-            className="w-full text-sm rounded-xl px-3.5 py-2.5 outline-none transition-colors duration-150 cursor-pointer"
-            style={{
-              background: "var(--surface)",
-              border:     "1px solid var(--input-border)",
-              color:      "var(--text-primary)",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-            onBlur={(e)  => (e.target.style.borderColor = "var(--input-border)")}
+            className="w-full text-xs font-mono uppercase tracking-wider rounded-[4px] px-2.5 py-1.5 bg-surface border border-input-border text-foreground outline-none focus:border-greptile-green cursor-pointer"
           >
             {HABIT_SECTIONS.map((s) => (
               <option key={s.value} value={s.value}>
@@ -200,28 +160,25 @@ function AddHabitForm() {
       </div>
 
       {/* Goal */}
-      <div className="space-y-3">
-        <label
-          className="text-xs font-semibold uppercase tracking-wide"
-          style={{ color: "var(--text-muted)" }}
-        >
-          Goal
+      <div className="space-y-2 pt-1">
+        <label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
+          Goal Target Configuration
         </label>
-        <div className="grid grid-cols-2 gap-2 p-1 rounded-xl" style={{ background: "var(--surface)" }}>
+        <div className="grid grid-cols-2 gap-2 p-1 rounded-[4px] bg-surface border border-border">
           <button
             type="button"
             onClick={() => {
               setGoalType("time");
               setValue("goalType", "time", { shouldValidate: true });
             }}
-            className="px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150"
-            style={{
-              background: goalType === "time" ? "var(--surface-raised)" : "transparent",
-              color:      goalType === "time" ? "var(--text-primary)"   : "var(--text-secondary)",
-              boxShadow:  goalType === "time" ? "var(--shadow-card)"    : "none",
-            }}
+            className={cn(
+              "px-3 py-1 rounded-[3px] text-xs font-mono uppercase tracking-wider font-semibold transition-all cursor-pointer",
+              goalType === "time"
+                ? "bg-greptile-green text-black shadow-[0_0_8px_rgba(40,233,159,0.3)]"
+                : "text-muted-foreground hover:text-foreground"
+            )}
           >
-            Focus Time
+            Focus Time Goal
           </button>
           <button
             type="button"
@@ -229,14 +186,14 @@ function AddHabitForm() {
               setGoalType("simple");
               setValue("goalType", "simple", { shouldValidate: true });
             }}
-            className="px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150"
-            style={{
-              background: goalType === "simple" ? "var(--surface-raised)" : "transparent",
-              color:      goalType === "simple" ? "var(--text-primary)"   : "var(--text-secondary)",
-              boxShadow:  goalType === "simple" ? "var(--shadow-card)"    : "none",
-            }}
+            className={cn(
+              "px-3 py-1 rounded-[3px] text-xs font-mono uppercase tracking-wider font-semibold transition-all cursor-pointer",
+              goalType === "simple"
+                ? "bg-greptile-green text-black shadow-[0_0_8px_rgba(40,233,159,0.3)]"
+                : "text-muted-foreground hover:text-foreground"
+            )}
           >
-            Achieve All
+            Simple Check
           </button>
         </div>
 
@@ -244,14 +201,7 @@ function AddHabitForm() {
           <select
             value={String(goalSeconds)}
             onChange={(e) => setGoalSeconds(Number(e.target.value))}
-            className="w-full text-sm rounded-xl px-3.5 py-2.5 outline-none transition-colors duration-150 cursor-pointer"
-            style={{
-              background: "var(--surface)",
-              border:     "1px solid var(--input-border)",
-              color:      "var(--text-primary)",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-            onBlur={(e)  => (e.target.style.borderColor = "var(--input-border)")}
+            className="w-full text-xs font-mono uppercase tracking-wider rounded-[4px] px-2.5 py-1.5 bg-surface border border-input-border text-foreground outline-none focus:border-greptile-green cursor-pointer mt-1"
           >
             {TIME_GOAL_OPTIONS.map((opt) => (
               <option key={opt.seconds} value={String(opt.seconds)}>
@@ -260,122 +210,80 @@ function AddHabitForm() {
             ))}
           </select>
         )}
-        {goalType === "simple" && (
-          <p className="text-[13px]" style={{ color: "var(--text-muted)" }}>
-            No time target — check in manually whenever you complete it.
-          </p>
-        )}
       </div>
 
       {/* Start Date + Goal Days */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-2">
-          <label
-            className="text-xs font-semibold uppercase tracking-wide"
-            style={{ color: "var(--text-muted)" }}
-          >
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
             Start Date
           </label>
           <input
             type="date"
             {...register("startDate")}
-            className="w-full text-sm rounded-xl px-3.5 py-2.5 outline-none transition-colors duration-150 [color-scheme:dark]"
-            style={{
-              background: "var(--surface)",
-              border:     "1px solid var(--input-border)",
-              color:      "var(--text-primary)",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-            onBlur={(e)  => (e.target.style.borderColor = "var(--input-border)")}
+            className="w-full text-xs font-mono rounded-[4px] px-2.5 py-1.5 bg-surface border border-input-border text-foreground outline-none focus:border-greptile-green [color-scheme:dark]"
           />
         </div>
-        <div className="space-y-2">
-          <label
-            className="text-xs font-semibold uppercase tracking-wide"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Goal Days
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
+            Commitment Span
           </label>
           <select
             value={goalDays}
             onChange={(e) => setValue("goalDays", e.target.value)}
-            className="w-full text-sm rounded-xl px-3.5 py-2.5 outline-none transition-colors duration-150 cursor-pointer"
-            style={{
-              background: "var(--surface)",
-              border:     "1px solid var(--input-border)",
-              color:      "var(--text-primary)",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-            onBlur={(e)  => (e.target.style.borderColor = "var(--input-border)")}
+            className="w-full text-xs font-mono uppercase tracking-wider rounded-[4px] px-2.5 py-1.5 bg-surface border border-input-border text-foreground outline-none focus:border-greptile-green cursor-pointer"
           >
-            <option value="forever">Forever</option>
-            <option value="7">7 days</option>
-            <option value="14">14 days</option>
-            <option value="21">21 days</option>
-            <option value="30">30 days</option>
+            <option value="forever">Indefinite (Forever)</option>
+            <option value="7">7 Days Sprint</option>
+            <option value="14">14 Days Sprint</option>
+            <option value="21">21 Days Sprint</option>
+            <option value="30">30 Days Challenge</option>
           </select>
         </div>
       </div>
 
-      {/* Reminder */}
-      <div className="space-y-2">
-        <label
-          className="text-xs font-semibold uppercase tracking-wide flex items-center gap-1.5"
-          style={{ color: "var(--text-muted)" }}
-        >
-          <Bell className="w-3.5 h-3.5" /> Reminder (Optional)
+      {/* Auto Popup */}
+      <div className="pt-2">
+        <label className="flex items-center gap-2.5 cursor-pointer select-none">
+          <button
+            type="button"
+            onClick={() => setValue("autoPopup", !autoPopup)}
+            className={cn(
+              "w-4 h-4 rounded-[3px] border flex items-center justify-center transition-all",
+              autoPopup
+                ? "bg-greptile-green border-greptile-green text-black"
+                : "bg-surface border-border-strong"
+            )}
+          >
+            {autoPopup && <Check className="w-3 h-3 stroke-[3]" />}
+          </button>
+          <span className="text-xs font-sans text-foreground">
+            Auto pop-up habit log when starting focus
+          </span>
         </label>
-        <input
-          type="time"
-          {...register("reminder")}
-          className="w-32 text-sm rounded-xl px-3.5 py-2.5 outline-none transition-colors duration-150 [color-scheme:dark]"
-          style={{
-            background: "var(--surface)",
-            border:     "1px solid var(--input-border)",
-            color:      "var(--text-primary)",
-          }}
-          onFocus={(e) => (e.target.style.borderColor = "var(--brand-blue)")}
-          onBlur={(e)  => (e.target.style.borderColor = "var(--input-border)")}
-        />
       </div>
 
-      {/* Auto Popup */}
-      <label className="flex items-center gap-3 cursor-pointer group mt-2 w-max">
-        <button
+      {/* Actions */}
+      <div className="flex justify-end gap-2 pt-3 border-t border-border/40">
+        <Button
           type="button"
-          onClick={() => setValue("autoPopup", !autoPopup)}
-          className="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-150"
-          style={{
-            borderColor: autoPopup ? "var(--brand-blue)" : "var(--border-strong)",
-            background:  autoPopup ? "var(--brand-blue)" : "transparent",
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            reset();
+            if (onCancel) onCancel();
           }}
         >
-          {autoPopup && <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />}
-        </button>
-        <span className="text-[13px] font-medium" style={{ color: "var(--text-primary)" }}>
-          Auto pop-up habit log when focusing
-        </span>
-      </label>
-
-      {/* Actions */}
-      <div className="flex justify-end gap-2 pt-2 border-t" style={{ borderColor: "var(--border)" }}>
-        <button
-          type="button"
-          onClick={() => reset()}
-          className="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 mt-4"
-          style={{ color: "var(--text-secondary)" }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--surface-hover)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "transparent"; }}
-        >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
+          variant="default"
+          size="sm"
           disabled={createHabit.isPending}
-          className="btn-pill btn-primary px-5 py-2 text-sm mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {createHabit.isPending ? "Saving…" : "Save Habit"}
-        </button>
+          {createHabit.isPending ? "Creating…" : "Save Habit"}
+        </Button>
       </div>
     </form>
   );

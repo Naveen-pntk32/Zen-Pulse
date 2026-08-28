@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Loader2, Flame } from "lucide-react";
+import { Loader2, Flame, CheckCircle2, Calendar, Target } from "lucide-react";
 import { DateNavigator } from "@/components/habits/DateNavigator";
 import { HabitSection } from "@/components/habits/HabitSection";
 import { HABIT_SECTION_ORDER } from "@/lib/defaults";
@@ -10,6 +10,7 @@ import {
   useHabitCompletionsBetween,
   useToggleHabitCompletion,
 } from "@/services/habit-completion.service";
+import { cn } from "@/lib/utils";
 
 function DailyCheckIn({ date, onChange }) {
   const { data: habits, isLoading: habitsLoading } = useHabits();
@@ -66,86 +67,68 @@ function DailyCheckIn({ date, onChange }) {
   return (
     <div className="space-y-6">
       {/* Date navigator */}
-      <div
-        className="rounded-3xl p-5"
-        style={{
-          background: "var(--surface-raised)",
-          border:     "1px solid var(--border)",
-        }}
-      >
+      <div className="rounded-[8px] p-4 bg-surface border border-border/80 shadow-sm">
         <DateNavigator date={date} onChange={onChange} />
       </div>
 
-      {/* Check-in status */}
+      {/* Check-in status banner */}
       <div
-        className="rounded-3xl p-6 text-center transition-all duration-300"
-        style={{
-          background:  allDone ? "rgba(74,222,128,0.08)" : "var(--surface-raised)",
-          border:      allDone ? "1px solid rgba(74,222,128,0.3)" : "1px solid var(--border)",
-        }}
+        className={cn(
+          "rounded-[8px] p-6 text-center transition-all duration-300 border relative overflow-hidden",
+          allDone
+            ? "bg-greptile-green/10 border-greptile-green/50 shadow-[0_0_24px_rgba(40,233,159,0.15)]"
+            : "bg-surface-raised border-border"
+        )}
       >
         {allDone ? (
           <>
-            <div className="text-4xl mb-3 mt-2">✅</div>
-            <div className="text-xl font-bold mb-1" style={{ color: "#4ade80" }}>
-              Great job!
+            <div className="w-10 h-10 mx-auto mb-2 rounded-[4px] bg-greptile-green text-black flex items-center justify-center shadow-[0_0_16px_rgba(40,233,159,0.4)]">
+              <CheckCircle2 className="w-6 h-6" />
             </div>
-            <div className="text-[13px]" style={{ color: "var(--text-muted)" }}>
-              You're on a roll! All habits completed today.
+            <div className="text-base font-bold font-display uppercase tracking-wider text-greptile-green">
+              DAILY GOALS ACCOMPLISHED!
             </div>
+            <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground mt-1">
+              ALL {activeHabits.length} HABIT PROTOCOLS RESOLVED
+            </p>
           </>
         ) : (
           <>
-            <div className="text-4xl mb-3 mt-2">📅</div>
-            <div className="text-xl font-bold mb-1" style={{ color: "var(--text-primary)" }}>
-              {completedCount} of {activeHabits.length} habits done
+            <div className="text-2xl font-bold font-mono tracking-tight text-foreground">
+              {completedCount} / {activeHabits.length}
             </div>
-            <div className="text-[13px]" style={{ color: "var(--text-muted)" }}>
-              {isFuture ? "Future date — check-ins locked" : "Keep going! You got this."}
+            <div className="text-xs font-mono uppercase tracking-wider text-muted-foreground mt-0.5">
+              {isFuture ? "FUTURE DATE — CHECK-INS LOCKED" : "DAILY PROTOCOLS COMPLETED"}
             </div>
           </>
         )}
         
         {streak > 0 && (
-          <div
-            className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full uppercase tracking-wide"
-            style={{
-              color:      "#f97316",
-              background: "rgba(249,115,22,0.12)",
-            }}
-          >
+          <div className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-[3px] border border-coral/40 bg-coral/10 text-coral">
             <Flame className="w-3.5 h-3.5" />
-            {streak} day streak
+            <span>{streak} DAY STREAK MAINTAINED</span>
           </div>
         )}
       </div>
 
-      {/* Today's habits */}
+      {/* Habits List by Routine Section */}
       <div>
         {habitsLoading || todayLoading ? (
           <div className="flex justify-center py-16">
-            <Loader2
-              className="w-5 h-5 animate-spin"
-              style={{ color: "var(--brand-blue)" }}
-            />
+            <Loader2 className="w-6 h-6 animate-spin text-greptile-green" />
           </div>
         ) : activeHabits.length === 0 ? (
-          <div
-            className="text-center py-16 rounded-3xl"
-            style={{
-              background: "var(--surface-raised)",
-              border:     "1px solid var(--border)",
-            }}
-          >
-            <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
-              No habits scheduled
+          <div className="text-center py-16 px-4 rounded-[6px] border border-dashed border-border/60 bg-surface/30 space-y-2">
+            <Target className="w-8 h-8 mx-auto text-muted-foreground/30" />
+            <p className="text-sm font-bold font-display text-foreground">
+              No habit routines scheduled for this date
             </p>
-            <p className="text-[13px] mt-1" style={{ color: "var(--text-muted)" }}>
-              Create a habit with the form to get started
+            <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+              Create a new habit routine to initiate tracking
             </p>
           </div>
         ) : (
-          <div className="space-y-4 pt-2">
+          <div className="space-y-4">
             {HABIT_SECTION_ORDER.map((section) => {
               const sectionHabits = activeHabits.filter((h) => h.section === section);
               if (sectionHabits.length === 0) return null;

@@ -12,7 +12,7 @@ function WeekDots({ habitId, endDate, completions }) {
     completions.find((c) => c.habitId === habitId && c.date === date);
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1">
       {days.map((day) => {
         const done = completionFor(day);
         const isToday = day === getLocalDateKey();
@@ -20,17 +20,18 @@ function WeekDots({ habitId, endDate, completions }) {
         return (
           <div
             key={day}
-            title={day}
-            className="w-2.5 h-2.5 rounded-full transition-colors duration-150"
+            title={`${day}: ${done?.completed ? "Completed" : "Not completed"}`}
+            className="w-2.5 h-2.5 rounded-[2px] transition-all duration-150"
             style={{
-              background: done?.completed
-                ? "#4ade80"
+              backgroundColor: done?.completed
+                ? "var(--greptile-green)"
                 : isToday
-                ? "var(--border-strong)"
-                : "var(--surface)",
-              boxShadow: isToday && !done?.completed
-                ? "0 0 0 1px var(--border)"
+                ? "rgba(85, 83, 104, 0.6)"
+                : "rgba(85, 83, 104, 0.25)",
+              boxShadow: done?.completed
+                ? "0 0 6px rgba(40,233,159,0.5)"
                 : "none",
+              border: isToday && !done?.completed ? "1px solid var(--greptile-green)" : "none"
             }}
           />
         );

@@ -4,45 +4,37 @@ import { Timer as TimerIcon, Hourglass } from "lucide-react";
 function ModeToggle({ value, onChange, disabled }) {
   return (
     <div
-      className="inline-flex rounded-xl p-1"
-      style={{
-        background: "var(--surface-raised)",
-        border:     "1px solid var(--border)",
-      }}
+      className="inline-flex rounded-[4px] p-1 bg-surface border border-border"
     >
       <button
         type="button"
         onClick={() => onChange("pomodoro")}
         disabled={disabled}
         className={cn(
-          "flex items-center gap-2 px-5 py-2 rounded-lg text-[13px] font-medium transition-all duration-150",
-          disabled && "opacity-50 cursor-not-allowed"
+          "flex items-center gap-2 px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider font-semibold transition-all duration-150 cursor-pointer",
+          disabled && "opacity-50 cursor-not-allowed",
+          value === "pomodoro"
+            ? "bg-greptile-green text-black shadow-[0_0_12px_rgba(40,233,159,0.3)]"
+            : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
         )}
-        style={{
-          background: value === "pomodoro" ? "var(--surface)"       : "transparent",
-          color:      value === "pomodoro" ? "var(--brand-blue)"    : "var(--text-secondary)",
-          boxShadow:  value === "pomodoro" ? "var(--shadow-card)"   : "none",
-        }}
       >
-        <TimerIcon className="w-4 h-4" />
-        Pomo
+        <TimerIcon className="w-3.5 h-3.5" />
+        <span>Pomodoro</span>
       </button>
       <button
         type="button"
         onClick={() => onChange("stopwatch")}
         disabled={disabled}
         className={cn(
-          "flex items-center gap-2 px-5 py-2 rounded-lg text-[13px] font-medium transition-all duration-150",
-          disabled && "opacity-50 cursor-not-allowed"
+          "flex items-center gap-2 px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-wider font-semibold transition-all duration-150 cursor-pointer",
+          disabled && "opacity-50 cursor-not-allowed",
+          value === "stopwatch"
+            ? "bg-sky text-black shadow-[0_0_12px_rgba(113,173,255,0.3)]"
+            : "text-muted-foreground hover:text-foreground hover:bg-surface-hover"
         )}
-        style={{
-          background: value === "stopwatch" ? "var(--surface)"       : "transparent",
-          color:      value === "stopwatch" ? "var(--brand-amber)"   : "var(--text-secondary)",
-          boxShadow:  value === "stopwatch" ? "var(--shadow-card)"   : "none",
-        }}
       >
-        <Hourglass className="w-4 h-4" />
-        Stopwatch
+        <Hourglass className="w-3.5 h-3.5" />
+        <span>Stopwatch</span>
       </button>
     </div>
   );
