@@ -2,40 +2,80 @@ import { Trophy } from "lucide-react";
 import { useHabits } from "@/services/habit.service";
 import { useTasks } from "@/services/task.service";
 import { formatHours } from "@/lib/date";
+
 function FocusBreakdown({ items }) {
   const { data: habits } = useHabits();
-  const { data: tasks } = useTasks();
+  const { data: tasks }  = useTasks();
+
   const maxSeconds = items[0]?.seconds ?? 1;
+
   if (items.length === 0) {
-    return <div className="text-sm text-gray-500 text-center py-6">
+    return (
+      <div
+        className="text-sm text-center py-6 rounded-xl"
+        style={{ color: "var(--text-muted)", background: "var(--surface)" }}
+      >
         No focus recorded in this period
-      </div>;
+      </div>
+    );
   }
-  return <div className="space-y-3">
+
+  return (
+    <div className="space-y-4">
       {items.map((item, index) => {
-    const icon = item.icon || (item.type === "habit" ? habits?.find((h) => h.name === item.targetName)?.icon || "\u{1F60A}" : tasks?.find((t) => t.title === item.targetName)?.title ? "\u{1F4CB}" : "\u{1F3AF}");
-    const width = Math.max(6, item.seconds / maxSeconds * 100);
-    return <div key={`${item.type}:${item.targetName}`} className="space-y-1">
+        const icon =
+          item.icon ||
+          (item.type === "habit"
+            ? habits?.find((h) => h.name === item.targetName)?.icon || "😊"
+            : tasks?.find((t) => t.title === item.targetName)?.title
+            ? "📋"
+            : "🎯");
+
+        const width = Math.max(6, (item.seconds / maxSeconds) * 100);
+
+        return (
+          <div key={`${item.type}:${item.targetName}`} className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2 min-w-0">
-                <span>{icon}</span>
-                <span className="text-gray-200 truncate">{item.targetName}</span>
-                {index === 0 && <Trophy className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="text-lg leading-none">{icon}</span>
+                <span
+                  className="font-medium truncate"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {item.targetName}
+                </span>
+                {index === 0 && (
+                  <Trophy
+                    className="w-3.5 h-3.5 shrink-0"
+                    style={{ color: "var(--brand-amber)" }}
+                  />
+                )}
               </div>
-              <span className="font-mono text-xs text-gray-400 shrink-0 ml-2">
+              <span
+                className="font-mono text-xs shrink-0 ml-2 font-medium"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 {formatHours(item.seconds)}
               </span>
             </div>
-            <div className="h-2 rounded-full bg-gray-700 overflow-hidden">
+            
+            <div
+              className="h-1.5 rounded-full overflow-hidden"
+              style={{ background: "var(--surface)" }}
+            >
               <div
-      className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
-      style={{ width: `${width}%` }}
-    />
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${width}%`,
+                  background: index === 0 ? "var(--brand-blue)" : "var(--text-muted)",
+                }}
+              />
             </div>
-          </div>;
-  })}
-    </div>;
+          </div>
+        );
+      })}
+    </div>
+  );
 }
-export {
-  FocusBreakdown
-};
+
+export { FocusBreakdown };

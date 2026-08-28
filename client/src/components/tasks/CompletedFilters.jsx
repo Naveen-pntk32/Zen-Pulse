@@ -1,59 +1,94 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+const DATE_OPTIONS = [
+  { value: "all",    label: "All Dates"     },
+  { value: "today",  label: "Today"          },
+  { value: "7",      label: "Last 7 Days"    },
+  { value: "30",     label: "Last 30 Days"   },
+  { value: "custom", label: "Custom Range"   },
+];
+
+function FilterSelect({ id, value, onChange, options, placeholder }) {
+  return (
+    <select
+      id={id}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="text-sm rounded-lg px-3 py-2 outline-none transition-colors duration-150 cursor-pointer"
+      style={{
+        background:   "var(--surface-raised)",
+        border:       "1px solid var(--border)",
+        color:        "var(--text-primary)",
+      }}
+      onFocus={(e)  => (e.target.style.borderColor = "var(--brand-blue)")}
+      onBlur={(e)   => (e.target.style.borderColor = "var(--border)")}
+    >
+      {options.map((o) => (
+        <option key={o.value} value={o.value} style={{ background: "var(--surface-raised)" }}>
+          {o.label}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function DateInput({ id, value, onChange }) {
+  return (
+    <input
+      id={id}
+      type="date"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="text-sm rounded-lg px-3 py-2 outline-none [color-scheme:dark] transition-colors duration-150"
+      style={{
+        background:   "var(--surface-raised)",
+        border:       "1px solid var(--border)",
+        color:        "var(--text-primary)",
+      }}
+      onFocus={(e)  => (e.target.style.borderColor = "var(--brand-blue)")}
+      onBlur={(e)   => (e.target.style.borderColor = "var(--border)")}
+    />
+  );
+}
+
 function CompletedFilters({
   lists,
-  dateFilter,
-  onDateFilter,
-  listFilter,
-  onListFilter,
-  customFrom,
-  customTo,
-  onCustomFrom,
-  onCustomTo
+  dateFilter,   onDateFilter,
+  listFilter,   onListFilter,
+  customFrom,   onCustomFrom,
+  customTo,     onCustomTo,
 }) {
-  return <div className="flex flex-wrap items-center gap-3">
-      <Select value={dateFilter} onValueChange={(v) => onDateFilter(v)}>
-        <SelectTrigger className="w-[160px] bg-gray-800 border-gray-700 text-gray-200">
-          <SelectValue placeholder="Date" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700 text-gray-200">
-          <SelectItem value="all">All Dates</SelectItem>
-          <SelectItem value="today">Today</SelectItem>
-          <SelectItem value="7">Last 7 Days</SelectItem>
-          <SelectItem value="30">Last 30 Days</SelectItem>
-          <SelectItem value="custom">Custom Range</SelectItem>
-        </SelectContent>
-      </Select>
+  const listOptions = [
+    { value: "all", label: "All Lists" },
+    ...(lists ?? []).map((l) => ({ value: l.id, label: `${l.icon || "📋"} ${l.name}` })),
+  ];
 
-      {dateFilter === "custom" && <>
-          <Input
-    type="date"
-    value={customFrom}
-    onChange={(e) => onCustomFrom(e.target.value)}
-    className="w-auto bg-gray-800 border-gray-700 text-gray-200 text-sm [color-scheme:dark]"
-  />
-          <span className="text-gray-500 text-sm">to</span>
-          <Input
-    type="date"
-    value={customTo}
-    onChange={(e) => onCustomTo(e.target.value)}
-    className="w-auto bg-gray-800 border-gray-700 text-gray-200 text-sm [color-scheme:dark]"
-  />
-        </>}
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {/* Date filter */}
+      <FilterSelect
+        id="completed-date-filter"
+        value={dateFilter}
+        onChange={onDateFilter}
+        options={DATE_OPTIONS}
+      />
 
-      <Select value={listFilter} onValueChange={onListFilter}>
-        <SelectTrigger className="w-[160px] bg-gray-800 border-gray-700 text-gray-200">
-          <SelectValue placeholder="Task List" />
-        </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700 text-gray-200">
-          <SelectItem value="all">All Lists</SelectItem>
-          {lists.map((list) => <SelectItem key={list.id} value={list.id}>
-              {list.icon} {list.name}
-            </SelectItem>)}
-        </SelectContent>
-      </Select>
-    </div>;
+      {/* Custom date range */}
+      {dateFilter === "custom" && (
+        <>
+          <DateInput id="completed-from-date" value={customFrom} onChange={onCustomFrom} />
+          <span className="text-xs" style={{ color: "var(--text-muted)" }}>to</span>
+          <DateInput id="completed-to-date"   value={customTo}   onChange={onCustomTo} />
+        </>
+      )}
+
+      {/* List filter */}
+      <FilterSelect
+        id="completed-list-filter"
+        value={listFilter}
+        onChange={onListFilter}
+        options={listOptions}
+      />
+    </div>
+  );
 }
-export {
-  CompletedFilters
-};
+
+export { CompletedFilters };
