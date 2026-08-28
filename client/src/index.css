@@ -147,9 +147,15 @@
   html {
     color-scheme: dark;
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
     background-color: var(--background);
     color: var(--text-primary);
     font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
@@ -159,26 +165,59 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Anybody', 'DM Sans', sans-serif;
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--text-primary);
   }
 
-  code, kbd, samp, pre {
+  code,
+  kbd,
+  samp,
+  pre {
     font-family: 'Space Mono', monospace;
   }
 
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     font-family: inherit;
   }
+}
+
+/* ============================================================
+   Seamless Hidden Scrollbars (Cross-browser Full-bleed design)
+   ============================================================ */
+html,
+body,
+* {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+  width: 0;
+  height: 0;
+  background: transparent;
 }
 
 /* ============================================================
    Greptile Custom Utilities & Pattern Layers
    ============================================================ */
 @layer utilities {
+
   /* --- Background Patterns --- */
   .bg-grid-pattern {
     background-image: radial-gradient(rgba(85, 83, 104, 0.25) 1px, transparent 1px);
@@ -205,13 +244,11 @@
   /* --- Technical Hatch Divider --- */
   .divider-hatch {
     height: 6px;
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 4px,
-      rgba(85, 83, 104, 0.3) 4px,
-      rgba(85, 83, 104, 0.3) 6px
-    );
+    background-image: repeating-linear-gradient(-45deg,
+        transparent,
+        transparent 4px,
+        rgba(85, 83, 104, 0.3) 4px,
+        rgba(85, 83, 104, 0.3) 6px);
   }
 
   /* --- Greptile Buttons --- */
@@ -272,16 +309,14 @@
 
   /* --- Chamfered Notch Corners --- */
   .btn-notch {
-    clip-path: polygon(
-      6px 0%,
-      calc(100% - 6px) 0%,
-      100% 6px,
-      100% calc(100% - 6px),
-      calc(100% - 6px) 100%,
-      6px 100%,
-      0% calc(100% - 6px),
-      0% 6px
-    );
+    clip-path: polygon(6px 0%,
+        calc(100% - 6px) 0%,
+        100% 6px,
+        100% calc(100% - 6px),
+        calc(100% - 6px) 100%,
+        6px 100%,
+        0% calc(100% - 6px),
+        0% 6px);
   }
 
   /* --- Technical Tags & Badges --- */
@@ -393,32 +428,25 @@
    Keyframes
    ============================================================ */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
-}
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
 
-/* ============================================================
-   Scrollbars
-   ============================================================ */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(85, 83, 104, 0.35);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(40, 233, 159, 0.5);
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
