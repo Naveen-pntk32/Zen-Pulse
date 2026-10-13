@@ -8,8 +8,43 @@ import { cn } from "@/lib/utils";
 /* Routes that are accessible without authentication */
 const PUBLIC_ROUTES = ["/", "/profile", "/terms", "/privacy"];
 
-/* Standalone pages rendered outside the application sidebar frame */
-const STANDALONE_PAGES = ["/", "/terms", "/privacy"];
+/* Standalone pages rendered with their own layout (Marketing, Auth, Admin, System) */
+const STANDALONE_PREFIXES = [
+  "/features",
+  "/pricing",
+  "/about",
+  "/contact",
+  "/faq",
+  "/changelog",
+  "/privacy",
+  "/terms",
+  "/cookies",
+  "/cookie-settings",
+  "/refund-policy",
+  "/cancellation-policy",
+  "/acceptable-use",
+  "/security",
+  "/accessibility",
+  "/dpa",
+  "/help",
+  "/support",
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password",
+  "/verify-email",
+  "/verify-otp",
+  "/invite",
+  "/onboarding",
+  "/upgrade",
+  "/downgrade",
+  "/billing/cancel",
+  "/checkout",
+  "/admin",
+  "/403",
+  "/500",
+  "/maintenance",
+];
 
 function LoadingScreen() {
   return (
@@ -25,7 +60,7 @@ function LoadingScreen() {
         <div className="flex items-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin text-greptile-green" />
           <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-            // INITIALIZING ZENPULSE...
+            // INITIALIZING PACE...
           </p>
         </div>
       </div>
@@ -38,8 +73,14 @@ function Layout({ children }) {
   const { user, loading } = useAuth();
   const [location] = useLocation();
 
-  /* Standalone public pages render full-width directly without blocking on auth */
-  if (STANDALONE_PAGES.includes(location)) {
+  const isStandalone =
+    location === "/" ||
+    STANDALONE_PREFIXES.some(
+      (prefix) => location === prefix || location.startsWith(`${prefix}/`)
+    );
+
+  /* Standalone public and dedicated layouts render directly */
+  if (isStandalone) {
     return <>{children}</>;
   }
 
@@ -101,7 +142,7 @@ function Layout({ children }) {
             <div className="hidden md:flex items-center justify-between px-6 py-3 border-b border-border/40 bg-surface/50 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
               <div className="flex items-center gap-2">
                 <span className="inline-block w-2 h-2 rounded-full bg-greptile-green animate-pulse" />
-                <span className="text-foreground/80 font-bold">ZenPulse</span>
+                <span className="text-foreground/80 font-bold">pace.</span>
                 <span>/</span>
                 <span className="text-greptile-green">
                   {location === "/" ? "POMODORO" : location.replace("/", "").toUpperCase()}

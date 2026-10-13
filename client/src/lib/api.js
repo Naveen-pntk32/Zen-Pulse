@@ -14,7 +14,7 @@ async function getAuthHeaders() {
       headers["Authorization"] = `Bearer ${token}`;
     } else {
       // Check for local mock user fallback
-      const mockUser = localStorage.getItem("zenpulse_mock_user");
+      const mockUser = localStorage.getItem("pace_mock_user") || localStorage.getItem("zenpulse_mock_user");
       if (mockUser) {
         try {
           const parsed = JSON.parse(mockUser);

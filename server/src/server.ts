@@ -15,7 +15,7 @@ async function startServer() {
 
   const server = app.listen(port, () => {
     console.log(`===============================================`);
-    console.log(`  ZenPulse Backend Server running on port ${port}`);
+    console.log(`  Pace Backend Server running on port ${port}`);
     console.log(`  Environment: ${config.nodeEnv}`);
     console.log(`  API Health: http://localhost:${port}/api/health`);
     console.log(`===============================================`);

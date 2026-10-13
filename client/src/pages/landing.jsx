@@ -201,7 +201,7 @@ export default function LandingPage() {
               <Zap className="w-4 h-4 text-black fill-black" />
             </div>
             <span className="font-display font-bold text-lg tracking-tight text-foreground">
-              ZenPulse
+              pace.
             </span>
             <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-[3px] bg-greptile-green/10 text-greptile-green border border-greptile-green/30">
               v2.4
@@ -329,7 +329,7 @@ export default function LandingPage() {
             Built for Extreme Focus Velocity
           </h2>
           <p className="text-sm text-muted-foreground font-sans max-w-xl mx-auto mt-3">
-            Every component in ZenPulse is engineered to remove micro-friction and keep you inside the
+            Every component in Pace is engineered to remove micro-friction and keep you inside the
             zone of peak flow.
           </p>
         </div>
@@ -439,7 +439,7 @@ export default function LandingPage() {
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground font-sans max-w-xl">
                 True multi-tenant data isolation backed by Supabase PostgreSQL and Row-Level Security. If
-                your connection drops, ZenPulse seamlessly falls back to indexed offline storage.
+                your connection drops, Pace seamlessly falls back to indexed offline storage.
               </p>
             </div>
 
@@ -518,12 +518,12 @@ export default function LandingPage() {
 
         <div className="space-y-3">
           <FaqItem
-            question="Is ZenPulse completely free to use?"
-            answer="Yes. ZenPulse provides full core capabilities including tasks, AI decomposition, Pomodoro timers, habit tracking, and cloud sync completely free. Premium tiers with advanced team telemetry will be optional additions in future releases."
+            question="Is Pace completely free to use?"
+            answer="Yes. Pace provides full core capabilities including tasks, AI decomposition, Pomodoro timers, habit tracking, and cloud sync completely free. Premium tiers with advanced team telemetry will be optional additions in future releases."
           />
           <FaqItem
-            question="Can I use ZenPulse offline without an internet connection?"
-            answer="Yes. ZenPulse implements an active local-first architecture. All task edits, focus sessions, and habit check-ins work in local storage and synchronize seamlessly with PostgreSQL when your network recovers."
+            question="Can I use Pace offline without an internet connection?"
+            answer="Yes. Pace implements an active local-first architecture. All task edits, focus sessions, and habit check-ins work in local storage and synchronize seamlessly with PostgreSQL when your network recovers."
           />
           <FaqItem
             question="How does the AI task decomposition work?"
@@ -535,7 +535,7 @@ export default function LandingPage() {
           />
           <FaqItem
             question="Can I export my data or migrate from TickTick / Todoist?"
-            answer="Yes. ZenPulse includes a dedicated one-click JSON migration engine in the settings and profile screens, allowing you to import and export your complete workspace."
+            answer="Yes. Pace includes a dedicated one-click JSON migration engine in the settings and profile screens, allowing you to import and export your complete workspace."
           />
         </div>
       </section>
@@ -560,7 +560,7 @@ export default function LandingPage() {
                 href={user ? "/pomodoro" : "/profile"}
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-[6px] bg-greptile-green text-black font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#34f5ab] transition-all shadow-[0_0_30px_rgba(40,233,159,0.4)]"
               >
-                Launch ZenPulse Console <ArrowRight className="w-4 h-4" />
+                Launch pace. Console <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
@@ -575,10 +575,10 @@ export default function LandingPage() {
               <Zap className="w-3.5 h-3.5 text-black fill-black" />
             </div>
             <span className="font-display font-bold text-sm tracking-tight text-foreground">
-              ZenPulse
+              pace.
             </span>
             <span className="text-xs text-muted-foreground font-mono">
-              // Focus Operating System
+              // Make room for focused work.
             </span>
           </div>
 
@@ -609,7 +609,7 @@ export default function LandingPage() {
           </div>
 
           <div className="text-xs font-mono text-muted-foreground">
-            © {new Date().getFullYear()} ZenPulse. Engineered for builders.
+            © {new Date().getFullYear()} Pace. Engineered for builders.
           </div>
         </div>
       </footer>

@@ -1,6 +1,6 @@
-# ZenPulse SaaS Production Engineering & Architecture Guide
+# Pace SaaS Production Engineering & Architecture Guide
 
-This guide details the production deployment, AI deep-work engine, high-converting landing page, custom SMTP email delivery, observability, and legal compliance architecture for ZenPulse.
+This guide details the production deployment, AI deep-work engine, high-converting landing page, custom SMTP email delivery, observability, and legal compliance architecture for Pace.
 
 ---
 
@@ -8,7 +8,7 @@ This guide details the production deployment, AI deep-work engine, high-converti
 
 ```
 +-----------------------------------------------------------------------------------+
-|                           ZENPULSE PRODUCTION ARCHITECTURE                        |
+|                             PACE PRODUCTION ARCHITECTURE                          |
 |                                                                                   |
 |  [Pillar 2] AI Deep-Work Intelligence                                             |
 |  - Autonomous task decomposition via Google Gemini API & deterministic heuristics |
@@ -42,7 +42,7 @@ Add your Google Gemini API key to the root `.env`:
 ```env
 GEMINI_API_KEY=AIzaSy...your_gemini_api_key_here
 ```
-> **Resilience Note**: If `GEMINI_API_KEY` is omitted or unconfigured, ZenPulse's built-in deterministic heuristic engine automatically generates high-quality phased subtasks, ensuring zero disruptions or failed requests.
+> **Resilience Note**: If `GEMINI_API_KEY` is omitted or unconfigured, Pace's built-in deterministic heuristic engine automatically generates high-quality phased subtasks, ensuring zero disruptions or failed requests.
 
 ---
 
@@ -67,13 +67,13 @@ Supabase's default shared SMTP server imposes a strict rate limit of **3 to 4 em
 
 ### 4.2 Eliminating the Limit with Resend
 1. Create a free account at [resend.com](https://resend.com).
-2. Add and verify your domain (e.g., `zenpulse.app`) with standard DKIM and SPF TXT records.
+2. Add and verify your domain (e.g., `pace.app`) with standard DKIM and SPF TXT records.
 3. Generate an API Key under **API Keys**.
 4. In your Supabase Dashboard:
    - Navigate to **Project Settings** → **Authentication** → **SMTP Settings**.
    - Enable **Enable Custom SMTP**.
-   - **Sender email**: `noreply@zenpulse.app`
-   - **Sender name**: `ZenPulse Focus OS`
+   - **Sender email**: `noreply@pace.app`
+   - **Sender name**: `Pace Focus OS`
    - **Host**: `smtp.resend.com`
    - **Port**: `465` (SSL) or `587` (TLS)
    - **User**: `resend`

@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import request from "supertest";
 import { app } from "../src/app.js";
 
-describe("ZenPulse Backend REST API Test Suite", () => {
+describe("Pace Backend REST API Test Suite", () => {
   describe("Health Endpoint", () => {
     it("GET /api/health returns 200 and system status", async () => {
       const res = await request(app).get("/api/health");

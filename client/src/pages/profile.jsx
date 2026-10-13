@@ -67,7 +67,7 @@ function AuthForm() {
             <Zap className="w-6 h-6 text-black fill-black" />
           </div>
           <h1 className="text-xl font-bold font-display tracking-tight text-foreground">
-            {mode === "login" ? "ACCESS ZENPULSE" : "INITIALIZE ACCOUNT"}
+            {mode === "login" ? "ACCESS PACE" : "INITIALIZE ACCOUNT"}
           </h1>
           <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground mt-1">
             {mode === "login"
@@ -96,7 +96,7 @@ function AuthForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="developer@zenpulse.app"
+                placeholder="developer@pace.app"
                 className="w-full px-3 py-2 rounded-[4px] text-xs font-sans bg-surface border border-input-border text-foreground placeholder:text-muted-foreground/60 outline-none focus:border-greptile-green focus:ring-1 focus:ring-greptile-green/40 transition-colors"
               />
             </div>
@@ -175,7 +175,7 @@ function AuthForm() {
 
         {/* Tagline */}
         <p className="text-center text-[10px] font-mono uppercase tracking-widest text-muted-foreground/60">
-          // ZENPULSE ENGINE v2.0 // DEEP WORK ARCHITECTURE
+          // PACE ENGINE v2.0 // MAKE ROOM FOR FOCUSED WORK
         </p>
       </div>
     </div>
@@ -241,7 +241,7 @@ function ProfilePage() {
         </div>
         <div>
           <h2 className="text-base font-bold font-display text-foreground">
-            {user.email ?? "ZenPulse User"}
+            {user.email ?? "Pace User"}
           </h2>
           <div className="flex items-center justify-center gap-4 text-xs font-mono text-muted-foreground mt-1">
             {user.email && (
@@ -303,7 +303,7 @@ function ProfilePage() {
         className="w-full"
       >
         <LogOut className="w-4 h-4 mr-2" />
-        <span>SIGN OUT FROM ZENPULSE</span>
+        <span>SIGN OUT FROM PACE</span>
       </Button>
     </div>
   );

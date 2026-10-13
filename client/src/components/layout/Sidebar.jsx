@@ -13,6 +13,8 @@ import {
   Menu,
   X,
   Zap,
+  Bell,
+  History,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
@@ -20,12 +22,14 @@ import { useSettings, useUpdateSettings } from "@/services/settings.service";
 import { applyTheme } from "@/contexts/theme";
 
 const NAV_ITEMS = [
-  { href: "/pomodoro", label: "Pomodoro",      code: "01", icon: Timer },
-  { href: "/tasks",    label: "Tasks",         code: "02", icon: CheckSquare },
-  { href: "/habits",   label: "Habit Tracker", code: "03", icon: Activity },
-  { href: "/search",   label: "Search",        code: "04", icon: Search },
-  { href: "/profile",  label: "Profile",       code: "05", icon: User },
-  { href: "/settings", label: "Settings",      code: "06", icon: Settings },
+  { href: "/pomodoro",      label: "Pomodoro",      code: "01", icon: Timer },
+  { href: "/tasks",         label: "Tasks",         code: "02", icon: CheckSquare },
+  { href: "/habits",        label: "Habit Tracker", code: "03", icon: Activity },
+  { href: "/search",        label: "Search",        code: "04", icon: Search },
+  { href: "/notifications", label: "Alerts",        code: "05", icon: Bell },
+  { href: "/activity",      label: "Activity",      code: "06", icon: History },
+  { href: "/profile",       label: "Profile",       code: "07", icon: User },
+  { href: "/settings",      label: "Settings",      code: "08", icon: Settings },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -67,14 +71,14 @@ function SidebarContent({ onNavigate }) {
         <div>
           <div className="flex items-center gap-1.5">
             <h1 className="text-sm font-bold font-display tracking-tight text-foreground leading-none">
-              ZENPULSE
+              pace.
             </h1>
             <span className="text-[9px] font-mono uppercase bg-greptile-green/15 text-greptile-green px-1 py-0.2 rounded-[2px] leading-none">
               v2
             </span>
           </div>
           <p className="text-[10px] font-mono mt-0.5 text-muted-foreground uppercase tracking-wider">
-            Focus Engine
+            Make room for focused work.
           </p>
         </div>
       </Link>
@@ -245,7 +249,7 @@ function MobileHeader({ onMenuOpen }) {
           <Zap className="w-3.5 h-3.5 text-black fill-black" />
         </div>
         <span className="text-sm font-bold font-display tracking-tight text-foreground">
-          ZENPULSE
+          pace.
         </span>
       </div>
 

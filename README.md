@@ -1,13 +1,14 @@
-# 🧘 ZenPulse
+# ⚡ pace.
+> **Make room for focused work.**
 
-A TickTick-inspired productivity and task management web app with a Pomodoro focus timer, task scheduling, and daily productivity analytics.
+A high-precision productivity, task management, and focus management web application featuring autonomous AI task decomposition, calibrated Pomodoro rhythms, habit tracking, and local-first cloud synchronization.
 
 **Live Demo:** [zen-pulse-liard.vercel.app](https://zen-pulse-liard.vercel.app/pomodoro)
 **Repository:** [github.com/Naveen-pntk32/Zen-Pulse](https://github.com/Naveen-pntk32/Zen-Pulse)
 
 ## Overview
 
-ZenPulse is a SaaS-style productivity app built end to end, combining task and project management with a Pomodoro-based focus system. It spans 10+ features — dashboard, tasks, projects, categories, search, filters, priorities, due dates, recurring tasks, and dark/light mode — backed by a REST API and a relational database.
+Pace is a SaaS-grade productivity application built end to end, combining task and project management with a Pomodoro-based focus system. It features AI-powered task breakdown, Pomodoro rhythm telemetry, habit streaks, search, filters, priorities, due dates, recurring tasks, and dark/light themes — backed by an Express REST API and a PostgreSQL database.
 
 ## Features
 

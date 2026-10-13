@@ -36,7 +36,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
     if (mockUserId) {
       req.user = {
         id: mockUserId,
-        email: (req.headers["x-mock-user-email"] as string) || `${mockUserId}@zenpulse.local`,
+        email: (req.headers["x-mock-user-email"] as string) || `${mockUserId}@pace.local`,
       };
       return next();
     }
@@ -44,7 +44,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
       const id = authHeader.replace("Bearer mock-token-", "");
       req.user = {
         id,
-        email: `${id}@zenpulse.local`,
+        email: `${id}@pace.local`,
       };
       return next();
     }

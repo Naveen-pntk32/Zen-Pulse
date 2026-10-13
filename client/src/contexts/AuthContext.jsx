@@ -67,7 +67,7 @@ function AuthProvider({ children }) {
           runBootstrap(u).catch((err) => console.warn("Bootstrap error:", err));
         } else {
           // Fallback to local mock user if no Supabase session
-          const mockUser = localStorage.getItem("zenpulse_mock_user");
+          const mockUser = localStorage.getItem("pace_mock_user") || localStorage.getItem("zenpulse_mock_user");
           if (mockUser) {
             try {
               const u = JSON.parse(mockUser);
@@ -84,7 +84,7 @@ function AuthProvider({ children }) {
         }
       } catch (e) {
         console.warn("Auth getSession failed:", e);
-        const mockUser = localStorage.getItem("zenpulse_mock_user");
+        const mockUser = localStorage.getItem("pace_mock_user") || localStorage.getItem("zenpulse_mock_user");
         if (mockUser) {
           try {
             const u = JSON.parse(mockUser);
@@ -134,7 +134,7 @@ function AuthProvider({ children }) {
       if (e.message?.includes("fetch") || e.message?.includes("NetworkError") || e.name === "TypeError" || e.message?.includes("CORS")) {
         console.warn("Supabase auth unavailable. Using local mock auth.");
         const fakeUser = { id: "local-user-123", email, createdAt: new Date().toISOString() };
-        localStorage.setItem("zenpulse_mock_user", JSON.stringify(fakeUser));
+        localStorage.setItem("pace_mock_user", JSON.stringify(fakeUser));
         setUser(fakeUser);
         await runBootstrap(fakeUser);
         return;
@@ -151,7 +151,7 @@ function AuthProvider({ children }) {
       if (e.message?.includes("fetch") || e.message?.includes("NetworkError") || e.name === "TypeError" || e.message?.includes("CORS")) {
         console.warn("Supabase auth unavailable. Using local mock auth.");
         const fakeUser = { id: "local-user-123", email, createdAt: new Date().toISOString() };
-        localStorage.setItem("zenpulse_mock_user", JSON.stringify(fakeUser));
+        localStorage.setItem("pace_mock_user", JSON.stringify(fakeUser));
         setUser(fakeUser);
         await runBootstrap(fakeUser);
         return;
@@ -166,6 +166,7 @@ function AuthProvider({ children }) {
     } catch (e) {
       // ignore
     }
+    localStorage.removeItem("pace_mock_user");
     localStorage.removeItem("zenpulse_mock_user");
     setUser(null);
     await runBootstrap(null);

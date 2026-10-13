@@ -1,6 +1,6 @@
-# ZenPulse Database & Full-Stack Setup Guide
+# Pace Database & Full-Stack Setup Guide
 
-This guide documents the architecture, setup, migrations, and deployment process for ZenPulse's full-stack application backed by PostgreSQL and Supabase.
+This guide documents the architecture, setup, migrations, and deployment process for Pace's full-stack application backed by PostgreSQL and Supabase.
 
 ---
 
@@ -60,7 +60,7 @@ VITE_API_URL=/api
 
 ## 4. Applying Database Migrations
 
-ZenPulse migrations are version-controlled in `supabase/migrations/`:
+Pace migrations are version-controlled in `supabase/migrations/`:
 - `001_zenpulse_evolution.sql`: Core schema (`task_lists`, `tasks`, `habits`, `habit_completions`, `focus_sessions`, `user_settings`, RLS policies, indexes).
 - `002_zenpulse_subtasks_profiles.sql`: Extended schema (`profiles`, `subtasks`, task recurrence & position).
 
@@ -123,7 +123,7 @@ npm run build
 
 ## 7. Production Deployment (Vercel)
 
-ZenPulse is preconfigured for unified monorepo deployment on Vercel:
+Pace is preconfigured for unified monorepo deployment on Vercel:
 
 1. **Vercel Settings**:
    - **Framework Preset**: Vite
