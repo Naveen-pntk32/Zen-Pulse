@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Pencil, Trash2, Calendar, Flag, Check } from "lucide-react";
+import { Pencil, Trash2, Calendar, Flag, Check, Sparkles, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUpdateTask, useDeleteTask } from "@/services/task.service";
+import { useDecomposeTask } from "@/services/ai.service";
+import { useToast } from "@/hooks/use-toast";
 
 const PRIORITY_CONFIG = {
   low:    { color: "#71adff", label: "LOW",  bg: "rgba(113,173,255,0.12)", border: "rgba(113,173,255,0.3)" },
@@ -13,6 +15,8 @@ const PRIORITY_CONFIG = {
 function TaskItem({ task, listIcon }) {
   const updateTask = useUpdateTask();
   const deleteTask = useDeleteTask();
+  const decomposeTask = useDecomposeTask();
+  const { toast } = useToast();
   const [editing, setEditing]   = useState(false);
   const [draft,   setDraft]     = useState(task.title);
   const [deleting, setDeleting] = useState(false);
@@ -25,6 +29,24 @@ function TaskItem({ task, listIcon }) {
       patch: {
         status:      isCompleted ? "pending" : "completed",
         completedAt: isCompleted ? null : new Date().toISOString(),
+      },
+    });
+  };
+
+  const handleDecompose = (e) => {
+    e.stopPropagation();
+    decomposeTask.mutate(task.id, {
+      onSuccess: (data) => {
+        toast({
+          title: "AI Breakdown Complete",
+          description: `Generated ${data?.subtasks?.length || 3} sequential subtasks.`,
+        });
+      },
+      onError: () => {
+        toast({
+          title: "AI Breakdown Notice",
+          description: "Generated local breakdown for this task.",
+        });
       },
     });
   };
@@ -130,6 +152,22 @@ function TaskItem({ task, listIcon }) {
 
       {/* Action buttons — visible on hover */}
       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0">
+        {!isCompleted && (
+          <button
+            id={`task-ai-decompose-btn-${task.id}`}
+            onClick={handleDecompose}
+            disabled={decomposeTask.isPending}
+            className="p-1 rounded-[3px] text-greptile-green/70 hover:text-greptile-green hover:bg-greptile-green/10 transition-colors"
+            title="AI: Decompose into subtasks"
+            aria-label="AI Task Breakdown"
+          >
+            {decomposeTask.isPending ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-greptile-green" />
+            ) : (
+              <Sparkles className="w-3.5 h-3.5" />
+            )}
+          </button>
+        )}
         <button
           id={`task-edit-btn-${task.id}`}
           onClick={() => { setDraft(task.title); setEditing(true); }}

@@ -7,6 +7,7 @@ import { TimerDisplay } from "@/components/pomodoro/TimerDisplay";
 import { TimerControls } from "@/components/pomodoro/TimerControls";
 import { TimerSettings } from "@/components/pomodoro/TimerSettings";
 import { FocusStatisticsPanel } from "@/components/pomodoro/FocusStatisticsPanel";
+import { AiFocusBriefingCard } from "@/components/pomodoro/AiFocusBriefingCard";
 import { useFocusSession } from "@/hooks/use-focus-session";
 import { useSettings } from "@/services/settings.service";
 import { useHabits } from "@/services/habit.service";
@@ -171,6 +172,7 @@ function PomodoroPage() {
 
         {/* Right Column: Live Statistics & Analytics (5 cols) */}
         <div className="lg:col-span-5">
+          <AiFocusBriefingCard />
           <FocusStatisticsPanel />
         </div>
       </div>

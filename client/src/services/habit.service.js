@@ -1,130 +1,140 @@
-import supabase from "@/config/supabase";
+import { api } from "@/lib/api";
 import { localDb } from "@/lib/local-db";
 import { getBackend, getCurrentUserIdSync, makeId } from "@/lib/backend";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 function mapRow(row) {
   return {
     id: row.id,
     name: row.name,
-    icon: row.icon ?? "\u{1F60A}",
+    icon: row.icon ?? "😊",
     frequency: row.frequency ?? "daily",
-    goalType: row.goal_type ?? "simple",
-    dailyGoalSeconds: row.daily_goal_seconds ?? 0,
-    startDate: row.start_date ?? (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
-    goalDays: row.goal_days ?? null,
+    goalType: row.goalType ?? row.goal_type ?? "simple",
+    dailyGoalSeconds: row.dailyGoalSeconds ?? row.daily_goal_seconds ?? 0,
+    startDate: row.startDate ?? row.start_date ?? new Date().toISOString().slice(0, 10),
+    goalDays: row.goalDays ?? row.goal_days ?? null,
     section: row.section ?? "others",
     reminder: row.reminder ?? null,
-    autoPopup: row.auto_popup ?? false,
+    autoPopup: row.autoPopup ?? row.auto_popup ?? false,
     archived: row.archived ?? false,
-    createdAt: row.created_at ?? (/* @__PURE__ */ new Date()).toISOString()
+    createdAt: row.createdAt ?? row.created_at ?? new Date().toISOString(),
   };
 }
-function toInsert(habit, userId) {
-  return {
-    id: makeId(),
-    user_id: userId,
-    name: habit.name,
-    icon: habit.icon ?? "\u{1F60A}",
-    frequency: habit.frequency ?? "daily",
-    goal_type: habit.goalType ?? "simple",
-    daily_goal_seconds: habit.dailyGoalSeconds ?? 0,
-    start_date: habit.startDate ?? (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
-    goal_days: habit.goalDays ?? null,
-    section: habit.section ?? "others",
-    reminder: habit.reminder ?? null,
-    auto_popup: habit.autoPopup ?? false,
-    archived: habit.archived ?? false,
-    created_at: (/* @__PURE__ */ new Date()).toISOString()
-  };
-}
-function toPatch(patch) {
-  return {
-    name: patch.name,
-    icon: patch.icon,
-    frequency: patch.frequency,
-    goal_type: patch.goalType,
-    daily_goal_seconds: patch.dailyGoalSeconds,
-    start_date: patch.startDate,
-    goal_days: patch.goalDays,
-    section: patch.section,
-    reminder: patch.reminder,
-    auto_popup: patch.autoPopup,
-    archived: patch.archived
-  };
-}
+
 const habitService = {
   async getAll(options) {
-    if (getBackend() === "supabase") {
-      let query = supabase.from("habits").select("*").order("created_at", { ascending: true });
-      if (!options?.includeArchived) {
-        query = query.eq("archived", false);
+    if (getBackend() !== "local") {
+      try {
+        const params = new URLSearchParams();
+        if (options?.includeArchived) params.append("includeArchived", "true");
+        const qs = params.toString();
+        const data = await api.get(`/habits${qs ? `?${qs}` : ""}`);
+        return (data ?? []).map(mapRow);
+      } catch (err) {
+        console.warn("[HabitService] API getAll failed, falling back to localDb:", err);
       }
-      const { data, error } = await query;
-      if (error) throw error;
-      return (data ?? []).map(mapRow);
     }
+
     let habits = localDb.getHabits();
     if (!options?.includeArchived) habits = habits.filter((h) => !h.archived);
     return habits;
   },
+
   async get(id) {
-    if (getBackend() === "supabase") {
-      const { data, error } = await supabase.from("habits").select("*").eq("id", id).maybeSingle();
-      if (error) throw error;
-      return data ? mapRow(data) : null;
+    if (getBackend() !== "local") {
+      try {
+        const data = await api.get(`/habits/${id}`);
+        return data ? mapRow(data) : null;
+      } catch (err) {
+        console.warn("[HabitService] API get failed, falling back to localDb:", err);
+      }
     }
     return localDb.getHabits().find((h) => h.id === id) ?? null;
   },
+
   async create(habit, userId) {
-    if (getBackend() === "supabase") {
-      const { data, error } = await supabase.from("habits").insert(toInsert(habit, userId)).select().single();
-      if (error) throw error;
-      return mapRow(data);
+    if (getBackend() !== "local") {
+      try {
+        const payload = {
+          name: habit.name,
+          icon: habit.icon ?? "😊",
+          frequency: habit.frequency ?? "daily",
+          goalType: habit.goalType ?? "simple",
+          dailyGoalSeconds: habit.dailyGoalSeconds ?? 0,
+          startDate: habit.startDate ?? new Date().toISOString().slice(0, 10),
+          goalDays: habit.goalDays ?? null,
+          section: habit.section ?? "others",
+          reminder: habit.reminder ?? null,
+          autoPopup: habit.autoPopup ?? false,
+          archived: habit.archived ?? false,
+        };
+        const created = await api.post("/habits", payload);
+        return mapRow(created);
+      } catch (err) {
+        console.warn("[HabitService] API create failed, falling back to localDb:", err);
+      }
     }
+
     const newHabit = {
       id: makeId(),
       name: habit.name,
-      icon: habit.icon ?? "\u{1F60A}",
+      icon: habit.icon ?? "😊",
       frequency: habit.frequency ?? "daily",
       goalType: habit.goalType ?? "simple",
       dailyGoalSeconds: habit.dailyGoalSeconds ?? 0,
-      startDate: habit.startDate ?? (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+      startDate: habit.startDate ?? new Date().toISOString().slice(0, 10),
       goalDays: habit.goalDays ?? null,
       section: habit.section ?? "others",
       reminder: habit.reminder ?? null,
       autoPopup: habit.autoPopup ?? false,
       archived: habit.archived ?? false,
-      createdAt: (/* @__PURE__ */ new Date()).toISOString()
+      createdAt: new Date().toISOString(),
     };
     localDb.setHabits([...localDb.getHabits(), newHabit]);
     return newHabit;
   },
+
   async update(id, patch) {
-    if (getBackend() === "supabase") {
-      const { data, error } = await supabase.from("habits").update(toPatch(patch)).eq("id", id).select().single();
-      if (error) throw error;
-      return mapRow(data);
+    if (getBackend() !== "local") {
+      try {
+        const updated = await api.patch(`/habits/${id}`, patch);
+        return mapRow(updated);
+      } catch (err) {
+        console.warn("[HabitService] API update failed, falling back to localDb:", err);
+      }
     }
+
     const habits = localDb.getHabits();
-    const next = habits.map((h) => h.id === id ? { ...h, ...patch } : h);
+    const next = habits.map((h) => (h.id === id ? { ...h, ...patch } : h));
     localDb.setHabits(next);
     return next.find((h) => h.id === id);
   },
+
   async remove(id) {
-    if (getBackend() === "supabase") {
-      const { error } = await supabase.from("habits").delete().eq("id", id);
-      if (error) throw error;
-      return;
+    if (getBackend() !== "local") {
+      try {
+        await api.delete(`/habits/${id}`);
+        return;
+      } catch (err) {
+        console.warn("[HabitService] API remove failed, falling back to localDb:", err);
+      }
     }
+
     localDb.setHabits(localDb.getHabits().filter((h) => h.id !== id));
   },
+
   async archive(id, archived) {
     return this.update(id, { archived });
-  }
+  },
 };
+
 function useHabits(options) {
-  return useQuery({ queryKey: ["habits", options?.includeArchived ?? false], queryFn: () => habitService.getAll(options) });
+  return useQuery({
+    queryKey: ["habits", options?.includeArchived ?? false],
+    queryFn: () => habitService.getAll(options),
+  });
 }
+
 function useCreateHabit() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -132,9 +142,10 @@ function useCreateHabit() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
       queryClient.invalidateQueries({ queryKey: ["focus-targets"] });
-    }
+    },
   });
 }
+
 function useUpdateHabit() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -142,9 +153,10 @@ function useUpdateHabit() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
       queryClient.invalidateQueries({ queryKey: ["focus-targets"] });
-    }
+    },
   });
 }
+
 function useDeleteHabit() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -153,13 +165,14 @@ function useDeleteHabit() {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
       queryClient.invalidateQueries({ queryKey: ["habit-completions"] });
       queryClient.invalidateQueries({ queryKey: ["focus-targets"] });
-    }
+    },
   });
 }
+
 export {
   habitService,
   useCreateHabit,
   useDeleteHabit,
   useHabits,
-  useUpdateHabit
+  useUpdateHabit,
 };

@@ -6,7 +6,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 /* Routes that are accessible without authentication */
-const PUBLIC_ROUTES = ["/profile"];
+const PUBLIC_ROUTES = ["/", "/profile", "/terms", "/privacy"];
+
+/* Standalone pages rendered outside the application sidebar frame */
+const STANDALONE_PAGES = ["/", "/terms", "/privacy"];
 
 function LoadingScreen() {
   return (
@@ -35,7 +38,12 @@ function Layout({ children }) {
   const { user, loading } = useAuth();
   const [location] = useLocation();
 
-  /* Show loading screen while auth state resolves */
+  /* Standalone public pages render full-width directly without blocking on auth */
+  if (STANDALONE_PAGES.includes(location)) {
+    return <>{children}</>;
+  }
+
+  /* Show loading screen while auth state resolves for workspace routes */
   if (loading) return <LoadingScreen />;
 
   /* Redirect unauthenticated users away from protected routes */

@@ -5,6 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Layout } from "@/components/layout/Layout";
+import LandingPage from "@/pages/landing";
+import TermsPage from "@/pages/terms";
+import PrivacyPage from "@/pages/privacy";
 import ProfilePage from "@/pages/profile";
 import TasksPage from "@/pages/tasks";
 import CompletedTasksPage from "@/pages/completed-tasks";
@@ -13,10 +16,14 @@ import HabitTrackerPage from "@/pages/habits";
 import SearchPage from "@/pages/search";
 import SettingsPage from "@/pages/settings";
 import NotFound from "@/pages/not-found";
+
 function Router() {
-  return <Layout>
+  return (
+    <Layout>
       <Switch>
-        <Route path="/" component={() => <Redirect to="/pomodoro" />} />
+        <Route path="/" component={LandingPage} />
+        <Route path="/terms" component={TermsPage} />
+        <Route path="/privacy" component={PrivacyPage} />
         <Route path="/profile" component={ProfilePage} />
         <Route path="/tasks" component={TasksPage} />
         <Route path="/tasks/completed" component={CompletedTasksPage} />
@@ -25,9 +32,10 @@ function Router() {
         <Route path="/habits" component={HabitTrackerPage} />
         <Route path="/search" component={SearchPage} />
         <Route path="/settings" component={SettingsPage} />
-                <Route component={NotFound} />
+        <Route component={NotFound} />
       </Switch>
-    </Layout>;
+    </Layout>
+  );
 }
 function App() {
   return <QueryClientProvider client={queryClient}>

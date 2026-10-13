@@ -10,81 +10,118 @@ async function bootstrapDefaults(user) {
   try {
     const [, settings] = await Promise.all([
       taskListService.ensureDefaults(user?.id ?? null),
-      settingsService.ensureDefaults(user?.id ?? null)
+      settingsService.ensureDefaults(user?.id ?? null),
     ]);
-    applyTheme(settings.theme ?? "dark");
+    if (settings?.theme) {
+      applyTheme(settings.theme);
+    }
   } catch (error) {
     console.error("Bootstrap defaults failed:", error);
   }
 }
+
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [backend, setBackend] = useState(getBackend());
+
   const runBootstrap = useCallback(async (u) => {
-    setCurrentUserId(u?.id ?? null);
-    const resolved = await refreshBackend(u?.id ?? null);
-    setBackend(resolved);
-    if (u && resolved === "supabase") {
-      try {
-        await migrateLocalToSupabase(u.id);
-      } catch (error) {
-        console.warn("Local data migration failed:", error);
+    try {
+      setCurrentUserId(u?.id ?? null);
+      const resolved = await refreshBackend(u?.id ?? null);
+      setBackend(resolved);
+      if (u && resolved === "supabase") {
+        try {
+          await migrateLocalToSupabase(u.id);
+        } catch (error) {
+          console.warn("Local data migration failed:", error);
+        }
       }
+      await bootstrapDefaults(u);
+    } catch (err) {
+      console.warn("runBootstrap error:", err);
     }
-    await bootstrapDefaults(u);
   }, []);
+
   useEffect(() => {
     let active = true;
+
+    // Safety timeout: ensure loading screen NEVER blocks more than 1.5 seconds
+    const safetyTimer = setTimeout(() => {
+      if (active) setLoading(false);
+    }, 1500);
+
     (async () => {
       try {
         const { data } = await supabase.auth.getSession();
         if (!active) return;
-        
-        const sessionUser = data.session?.user ?? null;
+
+        const sessionUser = data?.session?.user ?? null;
         if (sessionUser) {
-          const u = { id: sessionUser.id, email: sessionUser.email, createdAt: sessionUser.created_at };
+          const u = {
+            id: sessionUser.id,
+            email: sessionUser.email,
+            createdAt: sessionUser.created_at,
+          };
           setUser(u);
-          await runBootstrap(u);
+          runBootstrap(u).catch((err) => console.warn("Bootstrap error:", err));
         } else {
           // Fallback to local mock user if no Supabase session
           const mockUser = localStorage.getItem("zenpulse_mock_user");
           if (mockUser) {
-            const u = JSON.parse(mockUser);
-            setUser(u);
-            await runBootstrap(u);
+            try {
+              const u = JSON.parse(mockUser);
+              setUser(u);
+              runBootstrap(u).catch((err) => console.warn("Bootstrap error:", err));
+            } catch {
+              setUser(null);
+              runBootstrap(null).catch((err) => console.warn("Bootstrap error:", err));
+            }
           } else {
             setUser(null);
-            await runBootstrap(null);
+            runBootstrap(null).catch((err) => console.warn("Bootstrap error:", err));
           }
         }
       } catch (e) {
         console.warn("Auth getSession failed:", e);
-        // Fallback to local mock user
         const mockUser = localStorage.getItem("zenpulse_mock_user");
         if (mockUser) {
-          const u = JSON.parse(mockUser);
-          setUser(u);
-          await runBootstrap(u);
+          try {
+            const u = JSON.parse(mockUser);
+            setUser(u);
+            runBootstrap(u).catch((err) => console.warn("Bootstrap error:", err));
+          } catch {
+            setUser(null);
+            runBootstrap(null).catch((err) => console.warn("Bootstrap error:", err));
+          }
         } else {
           setUser(null);
-          await runBootstrap(null);
+          runBootstrap(null).catch((err) => console.warn("Bootstrap error:", err));
+        }
+      } finally {
+        if (active) {
+          clearTimeout(safetyTimer);
+          setLoading(false);
         }
       }
-      setLoading(false);
     })();
 
     const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const sessionUser = session?.user ?? null;
       if (sessionUser) {
-        const u = { id: sessionUser.id, email: sessionUser.email, createdAt: sessionUser.created_at };
+        const u = {
+          id: sessionUser.id,
+          email: sessionUser.email,
+          createdAt: sessionUser.created_at,
+        };
         setUser(u);
-        await runBootstrap(u);
+        runBootstrap(u).catch((err) => console.warn("Bootstrap error:", err));
       }
     });
 
     return () => {
       active = false;
+      clearTimeout(safetyTimer);
       listener?.subscription?.unsubscribe();
     };
   }, [runBootstrap]);
